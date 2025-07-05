@@ -1,0 +1,204 @@
+<div class="icon-features">
+  <div class="icon-features__wrapper">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="icon-features__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+    
+    <div class="icon-features__grid">
+      {%- for block in section.blocks -%}
+        <div class="icon-features__item" {{ block.shopify_attributes }}>
+          <div class="icon-features__icon-wrapper">
+            {%- if block.settings.icon != blank -%}
+              <img
+                src="{{ block.settings.icon | img_url: '64x64' }}"
+                alt="{{ block.settings.heading | escape }}"
+                width="32"
+                height="32"
+                loading="lazy"
+                class="icon-features__icon"
+              >
+            {%- else -%}
+              <div class="icon-features__icon-placeholder">
+                {{ 'icon-placeholder.svg' | inline_asset_content }}
+              </div>
+            {%- endif -%}
+          </div>
+          
+          <div class="icon-features__content">
+            {%- if block.settings.heading != blank -%}
+              <h3 class="icon-features__item-heading">{{ block.settings.heading | escape }}</h3>
+            {%- endif -%}
+            
+            {%- if block.settings.text != blank -%}
+              <p class="icon-features__text">{{ block.settings.text }}</p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Icon Features",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon",
+          "info": "32x32px SVG or PNG recommended"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Feature"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Share key features and benefits"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Icon Features",
+      "blocks": [
+        {
+          "type": "feature"
+        },
+        {
+          "type": "feature"
+        },
+        {
+          "type": "feature"
+        },
+        {
+          "type": "feature"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+.icon-features {
+  padding: var(--mobile-section-padding) 0;
+}
+
+.icon-features__wrapper {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 var(--page-margin);
+}
+
+.icon-features__heading {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.icon-features__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.icon-features__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.icon-features__icon-wrapper {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-accent);
+  background-color: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  border-radius: 12px;
+}
+
+.icon-features__icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.icon-features__icon-placeholder {
+  width: 32px;
+  height: 32px;
+  color: var(--color-accent);
+}
+
+.icon-features__content {
+  flex: 1;
+}
+
+.icon-features__item-heading {
+  font-size: 1.125rem;
+  margin-bottom: 0.25rem;
+}
+
+.icon-features__text {
+  font-size: 0.875rem;
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+/* Tablet Layout */
+@media (min-width: 768px) {
+  .icon-features {
+    padding: var(--desktop-section-padding) 0;
+  }
+  
+  .icon-features__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 2rem;
+  }
+}
+
+/* Desktop Layout */
+@media (min-width: 1024px) {
+  .icon-features__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .icon-features__item {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .icon-features__icon-wrapper {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+  }
+  
+  .icon-features__item-heading {
+    font-size: 1.25rem;
+  }
+  
+  .icon-features__text {
+    font-size: 1rem;
+  }
+}
+{% endstylesheet %}

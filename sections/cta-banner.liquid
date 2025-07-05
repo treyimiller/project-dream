@@ -1,0 +1,224 @@
+<div class="cta-banner cta-banner--{{ section.settings.color_scheme }}">
+  <div class="cta-banner__wrapper">
+    <div class="cta-banner__content">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="cta-banner__heading">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      
+      {%- if section.settings.text != blank -%}
+        <div class="cta-banner__text">{{ section.settings.text }}</div>
+      {%- endif -%}
+      
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link }}" class="button button--primary button--large">
+          {{ section.settings.button_label | escape }}
+        </a>
+      {%- endif -%}
+    </div>
+    
+    {%- if section.settings.image != blank -%}
+      <div class="cta-banner__image-wrapper">
+        <img
+          src="{{ section.settings.image | img_url: '600x' }}"
+          srcset="{{ section.settings.image | img_url: '300x' }} 300w,
+                  {{ section.settings.image | img_url: '600x' }} 600w,
+                  {{ section.settings.image | img_url: '900x' }} 900w"
+          sizes="(min-width: 768px) 300px, 200px"
+          alt="{{ section.settings.image.alt | escape }}"
+          loading="lazy"
+          class="cta-banner__image"
+        >
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "CTA Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ready to Get Started?"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Join thousands of satisfied customers who have transformed their experience.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image (optional)"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Primary"
+        },
+        {
+          "value": "accent",
+          "label": "Accent"
+        },
+        {
+          "value": "gradient",
+          "label": "Gradient"
+        }
+      ],
+      "default": "accent"
+    }
+  ],
+  "presets": [
+    {
+      "name": "CTA Banner"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+.cta-banner {
+  padding: var(--mobile-section-padding) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-banner__wrapper {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 3rem var(--page-margin);
+  border-radius: var(--card-border-radius);
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Color Schemes */
+.cta-banner--primary .cta-banner__wrapper {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.cta-banner--accent .cta-banner__wrapper {
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.cta-banner--gradient .cta-banner__wrapper {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  color: #ffffff;
+}
+
+.cta-banner__content {
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  z-index: 1;
+}
+
+.cta-banner__heading {
+  margin: 0;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+}
+
+.cta-banner__text {
+  font-size: 1.125rem;
+  opacity: 0.9;
+}
+
+.cta-banner__text p {
+  margin: 0;
+}
+
+.cta-banner__wrapper .button {
+  margin-top: 1rem;
+}
+
+/* For accent and gradient schemes, make button white */
+.cta-banner--accent .button--primary,
+.cta-banner--gradient .button--primary {
+  background-color: #ffffff;
+  color: var(--color-accent);
+}
+
+.cta-banner--accent .button--primary:hover,
+.cta-banner--gradient .button--primary:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.cta-banner__image-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.cta-banner__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Decorative elements */
+.cta-banner__wrapper::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -25%;
+  width: 50%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Tablet and Desktop */
+@media (min-width: 768px) {
+  .cta-banner {
+    padding: var(--desktop-section-padding) 0;
+  }
+  
+  .cta-banner__wrapper {
+    padding: 4rem;
+    flex-direction: row;
+    text-align: left;
+  }
+  
+  .cta-banner__content {
+    align-items: flex-start;
+    flex: 1;
+  }
+  
+  .cta-banner__image-wrapper {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cta-banner__wrapper {
+    padding: 5rem;
+  }
+}
+{% endstylesheet %}

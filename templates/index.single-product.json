@@ -1,0 +1,146 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "height": "full",
+        "full_width": true,
+        "overlay_opacity": 40,
+        "heading": "Introducing the Game-Changer",
+        "subheading": "<p>The one product that will transform your daily routine</p>",
+        "button_label": "Buy Now",
+        "button_link": "/products/",
+        "text_alignment": "center",
+        "show_scroll_indicator": true
+      }
+    },
+    "icon_features": {
+      "type": "icon-features",
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "heading": "Premium Quality",
+            "text": "Built to last with the finest materials"
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "heading": "Fast Shipping",
+            "text": "Free delivery in 2-3 business days"
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "heading": "30-Day Guarantee",
+            "text": "Love it or get your money back"
+          }
+        },
+        "feature_4": {
+          "type": "feature",
+          "settings": {
+            "heading": "24/7 Support",
+            "text": "We're here whenever you need us"
+          }
+        }
+      },
+      "block_order": ["feature_1", "feature_2", "feature_3", "feature_4"]
+    },
+    "product_showcase": {
+      "type": "image-with-text",
+      "settings": {
+        "layout": "image-left",
+        "heading": "Designed for Your Lifestyle",
+        "text": "<p>Every detail has been carefully crafted to ensure maximum comfort and functionality. From the premium materials to the innovative design, this product represents the perfect blend of style and substance.</p>",
+        "button_label": "Learn More",
+        "button_link": "/products/"
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "settings": {
+        "heading": "What Our Customers Say"
+      },
+      "blocks": {
+        "testimonial_1": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "This product has completely changed my daily routine. I can't imagine life without it!",
+            "author": "Sarah M.",
+            "author_info": "Verified Buyer"
+          }
+        },
+        "testimonial_2": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Outstanding quality and super fast shipping. Exceeded all my expectations!",
+            "author": "Mike T.",
+            "author_info": "Verified Buyer"
+          }
+        },
+        "testimonial_3": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Best purchase I've made this year. Worth every penny!",
+            "author": "Emma L.",
+            "author_info": "Verified Buyer"
+          }
+        }
+      },
+      "block_order": ["testimonial_1", "testimonial_2", "testimonial_3"]
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {
+        "heading": "Frequently Asked Questions"
+      },
+      "blocks": {
+        "question_1": {
+          "type": "question",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>We offer free shipping on all orders, with delivery typically taking 2-3 business days within the US.</p>"
+          }
+        },
+        "question_2": {
+          "type": "question",
+          "settings": {
+            "question": "What's your return policy?",
+            "answer": "<p>We offer a 30-day money-back guarantee. If you're not completely satisfied, return the product for a full refund.</p>"
+          }
+        },
+        "question_3": {
+          "type": "question",
+          "settings": {
+            "question": "Is this product suitable for beginners?",
+            "answer": "<p>Absolutely! Our product is designed to be user-friendly and comes with detailed instructions to get you started.</p>"
+          }
+        }
+      },
+      "block_order": ["question_1", "question_2", "question_3"]
+    },
+    "final_cta": {
+      "type": "cta-banner",
+      "settings": {
+        "heading": "Limited Time Offer - 20% Off",
+        "text": "<p>Don't miss out on this exclusive deal. Order now and transform your experience!</p>",
+        "button_label": "Claim Your Discount",
+        "button_link": "/products/",
+        "color_scheme": "gradient"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "icon_features",
+    "product_showcase",
+    "testimonials",
+    "faq",
+    "final_cta"
+  ]
+}

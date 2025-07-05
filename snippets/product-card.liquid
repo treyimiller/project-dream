@@ -1,0 +1,60 @@
+<article class="product-card">
+  <a href="{{ product.url }}" class="product-card__link">
+    <div class="product-card__media">
+      {%- if product.featured_image -%}
+        <img
+          src="{{ product.featured_image | img_url: '400x400' }}"
+          srcset="{{ product.featured_image | img_url: '200x200' }} 200w,
+                  {{ product.featured_image | img_url: '400x400' }} 400w,
+                  {{ product.featured_image | img_url: '600x600' }} 600w"
+          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+          alt="{{ product.featured_image.alt | escape }}"
+          loading="lazy"
+          class="product-card__image"
+        >
+        
+        {%- if product.images.size > 1 -%}
+          <img
+            src="{{ product.images[1] | img_url: '400x400' }}"
+            alt="{{ product.images[1].alt | escape }}"
+            loading="lazy"
+            class="product-card__image product-card__image--hover"
+          >
+        {%- endif -%}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'product-card__placeholder' }}
+      {%- endif -%}
+      
+      {%- if product.compare_at_price > product.price -%}
+        <span class="product-card__badge">
+          Save {{ product.compare_at_price | minus: product.price | money_without_currency | times: 100 | divided_by: product.compare_at_price | round }}%
+        </span>
+      {%- endif -%}
+    </div>
+    
+    <div class="product-card__info">
+      <h3 class="product-card__title">{{ product.title | escape }}</h3>
+      
+      <div class="product-card__price">
+        {%- if product.compare_at_price > product.price -%}
+          <span class="product-card__price--sale">{{ product.price | money }}</span>
+          <span class="product-card__price--compare">{{ product.compare_at_price | money }}</span>
+        {%- else -%}
+          <span>{{ product.price | money }}</span>
+        {%- endif -%}
+      </div>
+      
+      {%- if product.available -%}
+        <button class="product-card__quick-add button button--primary button--full-width" 
+                data-product-id="{{ product.id }}"
+                data-variant-id="{{ product.selected_or_first_available_variant.id }}">
+          Add to Cart
+        </button>
+      {%- else -%}
+        <button class="button button--secondary button--full-width" disabled>
+          Sold Out
+        </button>
+      {%- endif -%}
+    </div>
+  </a>
+</article>

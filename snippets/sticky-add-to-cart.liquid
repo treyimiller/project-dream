@@ -1,0 +1,73 @@
+{%- comment -%}
+  Renders a sticky add-to-cart bar for mobile product pages
+  
+  Accepts:
+  - product: product object (required)
+  - show_on_scroll: boolean - Whether to show only when main form scrolls out of view (default: true)
+  
+  Usage:
+  {% render 'sticky-add-to-cart', product: product %}
+{%- endcomment -%}
+
+{%- if product -%}
+  <div class="sticky-add-to-cart{% unless show_on_scroll == false %} sticky-add-to-cart--on-scroll{% endunless %}" data-sticky-cart data-product-id="{{ product.id }}">
+    <div class="sticky-add-to-cart__content">
+      <div class="sticky-add-to-cart__product-info">
+        {%- if product.featured_image -%}
+          <img
+            src="{{ product.featured_image | img_url: '80x80' }}"
+            alt="{{ product.featured_image.alt | escape }}"
+            width="40"
+            height="40"
+            loading="lazy"
+            class="sticky-add-to-cart__image"
+          >
+        {%- endif -%}
+        
+        <div class="sticky-add-to-cart__details">
+          <h3 class="sticky-add-to-cart__title">{{ product.title | escape }}</h3>
+          <div class="sticky-add-to-cart__price" data-sticky-price>
+            {%- if product.compare_at_price > product.price -%}
+              <span class="sticky-add-to-cart__price--sale">{{ product.selected_or_first_available_variant.price | money }}</span>
+              <span class="sticky-add-to-cart__price--compare">{{ product.selected_or_first_available_variant.compare_at_price | money }}</span>
+            {%- else -%}
+              <span>{{ product.selected_or_first_available_variant.price | money }}</span>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+      
+      <div class="sticky-add-to-cart__actions">
+        {%- if product.has_only_default_variant -%}
+          <button 
+            type="button"
+            class="sticky-add-to-cart__button button button--primary"
+            data-add-to-cart
+            data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+            {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+          >
+            {%- if product.selected_or_first_available_variant.available -%}
+              Add to Cart
+            {%- else -%}
+              Sold Out
+            {%- endif -%}
+          </button>
+        {%- else -%}
+          <button 
+            type="button"
+            class="sticky-add-to-cart__button button button--secondary"
+            data-scroll-to-form
+          >
+            Select Options
+          </button>
+        {%- endif -%}
+      </div>
+    </div>
+    
+    {%- if product.selected_or_first_available_variant.inventory_management == 'shopify' and product.selected_or_first_available_variant.inventory_quantity <= 10 and product.selected_or_first_available_variant.inventory_quantity > 0 -%}
+      <div class="sticky-add-to-cart__urgency">
+        {% render 'stock-counter', product: product, variant: product.selected_or_first_available_variant, threshold: 10 %}
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}

@@ -1,0 +1,435 @@
+<div class="hero hero--{{ section.settings.height }}{% if section.settings.full_width %} hero--full-width{% endif %}">
+  <div class="hero__media-container">
+    {%- if section.settings.video_url != blank -%}
+      <!-- Video Background -->
+      <video
+        class="hero__video"
+        autoplay
+        muted
+        loop
+        playsinline
+        poster="{{ section.settings.image | img_url: '1920x' }}"
+      >
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+      </video>
+    {%- elsif section.settings.image != blank -%}
+      <!-- Image Background -->
+      <img
+        class="hero__image"
+        src="{{ section.settings.image | img_url: '1920x' }}"
+        srcset="{{ section.settings.image | img_url: '375x' }} 375w,
+                {{ section.settings.image | img_url: '750x' }} 750w,
+                {{ section.settings.image | img_url: '1125x' }} 1125w,
+                {{ section.settings.image | img_url: '1500x' }} 1500w,
+                {{ section.settings.image | img_url: '1920x' }} 1920w"
+        sizes="100vw"
+        alt="{{ section.settings.image.alt | escape }}"
+        loading="eager"
+      >
+    {%- else -%}
+      <!-- Placeholder -->
+      <div class="hero__placeholder"></div>
+    {%- endif -%}
+    
+    <!-- Overlay -->
+    {%- if section.settings.overlay_opacity > 0 -%}
+      <div class="hero__overlay" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }}"></div>
+    {%- endif -%}
+  </div>
+
+  <div class="hero__content-wrapper">
+    <div class="hero__content hero__content--{{ section.settings.text_alignment }}">
+      {%- if section.settings.heading != blank -%}
+        <h1 class="hero__heading animate-fadeIn">
+          {{ section.settings.heading | escape }}
+        </h1>
+      {%- endif -%}
+
+      {%- if section.settings.subheading != blank -%}
+        <p class="hero__subheading animate-fadeIn" style="animation-delay: 0.2s">
+          {{ section.settings.subheading }}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <div class="hero__buttons animate-fadeIn" style="animation-delay: 0.4s">
+          <a href="{{ section.settings.button_link }}" class="button button--primary button--large">
+            {{ section.settings.button_label | escape }}
+          </a>
+          
+          {%- if section.settings.button_label_2 != blank -%}
+            <a href="{{ section.settings.button_link_2 }}" class="button button--secondary button--large">
+              {{ section.settings.button_label_2 | escape }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if section.settings.show_scroll_indicator -%}
+    <div class="hero__scroll-indicator">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M12 5v14M5 12l7 7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Section height",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "full",
+          "label": "Full screen"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "Use a direct link to an MP4 video file"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 30,
+      "unit": "%"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Welcome to Project-Dream"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>The ultimate mobile-first shopping experience</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Second button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Second button link"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_indicator",
+      "label": "Show scroll indicator",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: var(--color-media-bg);
+}
+
+/* Height variants */
+.hero--small {
+  min-height: 40vh;
+}
+
+.hero--medium {
+  min-height: 60vh;
+}
+
+.hero--large {
+  min-height: 80vh;
+}
+
+.hero--full {
+  min-height: 100vh;
+}
+
+/* Full width variant */
+.hero--full-width .hero__media-container,
+.hero--full-width .hero__content-wrapper {
+  grid-column: 1 / -1;
+}
+
+/* Media Container */
+.hero__media-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.hero__video,
+.hero__image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+}
+
+.hero__placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
+
+.hero__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  pointer-events: none;
+}
+
+/* Content */
+.hero__content-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: var(--mobile-section-padding) var(--page-margin);
+}
+
+.hero__content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.hero__content--left {
+  margin: 0;
+}
+
+.hero__content--center {
+  text-align: center;
+}
+
+.hero__content--right {
+  margin: 0 0 0 auto;
+  text-align: right;
+}
+
+.hero__heading {
+  color: #ffffff;
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero__subheading {
+  color: #ffffff;
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  line-height: 1.4;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.hero__buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero__content--center .hero__buttons {
+  justify-content: center;
+}
+
+.hero__content--right .hero__buttons {
+  justify-content: flex-end;
+}
+
+.button--large {
+  padding: 1.25rem 2.5rem;
+  font-size: 1.25rem;
+}
+
+/* Scroll Indicator */
+.hero__scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ffffff;
+  animation: bounce 2s infinite;
+  cursor: pointer;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  40% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+  60% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 767px) {
+  .hero__content {
+    max-width: 100%;
+  }
+  
+  .hero__buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .hero__buttons .button {
+    width: 100%;
+  }
+  
+  .hero--full {
+    min-height: 100svh; /* Use small viewport height for mobile */
+  }
+}
+
+/* Tablet and Desktop */
+@media (min-width: 768px) {
+  .hero__content-wrapper {
+    padding: var(--desktop-section-padding) var(--page-margin);
+  }
+  
+  .hero__content {
+    max-width: 800px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero__scroll-indicator {
+    animation: none;
+  }
+  
+  .animate-fadeIn {
+    animation: none;
+    opacity: 1;
+  }
+}
+{% endstylesheet %}
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function() {
+  const scrollIndicator = document.querySelector('.hero__scroll-indicator');
+  
+  if (scrollIndicator) {
+    scrollIndicator.addEventListener('click', function() {
+      const heroSection = this.closest('.hero');
+      const nextSection = heroSection.nextElementSibling;
+      
+      if (nextSection) {
+        nextSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+  
+  // Pause video when out of viewport for performance
+  const heroVideo = document.querySelector('.hero__video');
+  
+  if (heroVideo) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          heroVideo.play();
+        } else {
+          heroVideo.pause();
+        }
+      });
+    }, { threshold: 0.25 });
+    
+    observer.observe(heroVideo);
+  }
+});
+{% endjavascript %}

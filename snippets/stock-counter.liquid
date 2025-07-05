@@ -1,0 +1,39 @@
+{%- comment -%}
+  Renders a stock scarcity indicator
+  
+  Accepts:
+  - product: product object (required)
+  - variant: variant object (optional, will use first variant if not provided)
+  - threshold: number - Show counter when stock is below this number (default: 10)
+  - text_template: string - Template text with {count} placeholder (default: 'Hurry! Only {count} left in stock')
+  
+  Usage:
+  {% render 'stock-counter', product: product, threshold: 5 %}
+{%- endcomment -%}
+
+{%- liquid
+  assign selected_variant = variant | default: product.selected_or_first_available_variant
+  assign stock_threshold = threshold | default: 10
+  assign display_text = text_template | default: 'Hurry! Only {count} left in stock'
+  
+  if selected_variant.inventory_management == 'shopify' and selected_variant.inventory_policy == 'deny'
+    assign show_counter = true
+    assign stock_count = selected_variant.inventory_quantity
+  else
+    assign show_counter = false
+  endif
+-%}
+
+{%- if show_counter and stock_count > 0 and stock_count <= stock_threshold -%}
+  <div class="stock-counter" data-stock-counter data-variant-id="{{ selected_variant.id }}">
+    <div class="stock-counter__icon">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M8 1L10.39 6.26L16.18 7.35L12.09 11.04L13.18 16.81L8 14L2.82 16.81L3.91 11.04L-0.18 7.35L5.61 6.26L8 1Z" fill="currentColor"/>
+      </svg>
+    </div>
+    
+    <span class="stock-counter__text">
+      {{ display_text | replace: '{count}', '<span class="stock-counter__count" data-stock-count>' | append: stock_count | append: '</span>' }}
+    </span>
+  </div>
+{%- endif -%}

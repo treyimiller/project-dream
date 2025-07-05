@@ -6,11 +6,14 @@
 
     {% # Load and preload the critical CSS %}
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ 'project-dream-base.css' | asset_url | stylesheet_tag: preload: true }}
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
 
     {{ content_for_header }}
+    
+    <script src="{{ 'urgency-timer.js' | asset_url }}" defer></script>
   </head>
 
   <body>

@@ -1,0 +1,161 @@
+<div class="faq">
+  <div class="faq__wrapper">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="faq__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+    
+    <div class="faq__items">
+      {%- for block in section.blocks -%}
+        <details class="faq__item" {{ block.shopify_attributes }}>
+          <summary class="faq__question">
+            {{ block.settings.question | escape }}
+            <svg class="faq__icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </summary>
+          
+          <div class="faq__answer">
+            {{ block.settings.answer }}
+          </div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is your return policy?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>We offer a 30-day money-back guarantee on all products. If you're not satisfied, simply return the item for a full refund.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        {
+          "type": "question"
+        },
+        {
+          "type": "question"
+        },
+        {
+          "type": "question"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+.faq {
+  padding: var(--mobile-section-padding) 0;
+}
+
+.faq__wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 var(--page-margin);
+}
+
+.faq__heading {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.faq__items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.faq__item {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-border-radius);
+  overflow: hidden;
+}
+
+.faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+  transition: background-color 0.2s ease;
+}
+
+.faq__question:hover {
+  background-color: var(--color-media-bg);
+}
+
+.faq__question::-webkit-details-marker {
+  display: none;
+}
+
+.faq__icon {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.faq__item[open] .faq__icon {
+  transform: rotate(180deg);
+}
+
+.faq__answer {
+  padding: 0 1.25rem 1.25rem;
+  color: var(--color-secondary);
+}
+
+.faq__answer p {
+  margin-bottom: 0.5rem;
+}
+
+.faq__answer p:last-child {
+  margin-bottom: 0;
+}
+
+/* Tablet and Desktop */
+@media (min-width: 768px) {
+  .faq {
+    padding: var(--desktop-section-padding) 0;
+  }
+  
+  .faq__question {
+    padding: 1.5rem;
+    font-size: 1.125rem;
+  }
+  
+  .faq__answer {
+    padding: 0 1.5rem 1.5rem;
+  }
+}
+{% endstylesheet %}

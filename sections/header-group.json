@@ -11,12 +11,20 @@
   "type": "header",
   "name": "t:general.header",
   "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "text": "Free shipping on orders over $50 🚚",
+        "color_scheme": "accent"
+      }
+    },
     "header": {
       "type": "header",
       "settings": {}
     }
   },
   "order": [
+    "announcement-bar",
     "header"
-  ],
+  ]
 }

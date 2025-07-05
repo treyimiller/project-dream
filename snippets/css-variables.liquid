@@ -9,10 +9,140 @@
     --font-primary--family: {{ settings.type_primary_font.family }}, {{ settings.type_primary_font.fallback_families }};
     --font-primary--style: {{ settings.type_primary_font.style }};
     --font-primary--weight: {{ settings.type_primary_font.weight }};
+    --font-heading--family: {{ settings.type_heading_font.family | default: settings.type_primary_font.family }}, {{ settings.type_heading_font.fallback_families | default: settings.type_primary_font.fallback_families }};
     --page-width: {{ settings.max_page_width }};
     --page-margin: {{ settings.min_page_margin }}px;
-    --color-background: {{ settings.background_color }};
-    --color-foreground: {{ settings.foreground_color }};
     --style-border-radius-inputs: {{ settings.input_corner_radius }}px;
+    
+    /* Mobile-First Spacing */
+    --mobile-section-padding: {{ settings.mobile_section_padding | default: 2 }}rem;
+    --desktop-section-padding: {{ settings.desktop_section_padding | default: 4 }}rem;
+    
+    /* Border Radius */
+    --button-border-radius: {{ settings.button_border_radius | default: 8 }}px;
+    --card-border-radius: {{ settings.card_border_radius | default: 12 }}px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+    
+    /* Z-index Scale */
+    --z-index-dropdown: 10;
+    --z-index-sticky: 20;
+    --z-index-fixed: 30;
+    --z-index-modal-backdrop: 40;
+    --z-index-modal: 50;
+    --z-index-popover: 60;
+    --z-index-tooltip: 70;
+  }
+
+  {% comment %} Color Scheme Logic {% endcomment %}
+  {% liquid
+    case settings.color_scheme
+      when 'modern_minimalist'
+        assign scheme_bg = '#ffffff'
+        assign scheme_fg = '#1a1a1a'
+        assign scheme_primary = '#000000'
+        assign scheme_secondary = '#666666'
+        assign scheme_accent = '#0066cc'
+        assign scheme_success = '#00d26a'
+        assign scheme_warning = '#ffa500'
+        assign scheme_error = '#ff4545'
+        assign scheme_border = '#e5e5e5'
+      when 'bold_contrast'
+        assign scheme_bg = '#ffffff'
+        assign scheme_fg = '#000000'
+        assign scheme_primary = '#000000'
+        assign scheme_secondary = '#333333'
+        assign scheme_accent = '#ff0000'
+        assign scheme_success = '#00ff00'
+        assign scheme_warning = '#ffaa00'
+        assign scheme_error = '#ff0000'
+        assign scheme_border = '#cccccc'
+      when 'warm_earth'
+        assign scheme_bg = '#faf8f5'
+        assign scheme_fg = '#2d1810'
+        assign scheme_primary = '#8b4513'
+        assign scheme_secondary = '#a0522d'
+        assign scheme_accent = '#ff6b35'
+        assign scheme_success = '#228b22'
+        assign scheme_warning = '#ff8c00'
+        assign scheme_error = '#dc143c'
+        assign scheme_border = '#ddd5cc'
+      when 'ocean_breeze'
+        assign scheme_bg = '#f0f8ff'
+        assign scheme_fg = '#1e3a5f'
+        assign scheme_primary = '#006994'
+        assign scheme_secondary = '#4682b4'
+        assign scheme_accent = '#20b2aa'
+        assign scheme_success = '#32cd32'
+        assign scheme_warning = '#ffa500'
+        assign scheme_error = '#ff6347'
+        assign scheme_border = '#b0d4e8'
+      when 'sunset_vibes'
+        assign scheme_bg = '#fff5ee'
+        assign scheme_fg = '#2f1b14'
+        assign scheme_primary = '#8b3a3a'
+        assign scheme_secondary = '#cd853f'
+        assign scheme_accent = '#ff4500'
+        assign scheme_success = '#32cd32'
+        assign scheme_warning = '#ffa500'
+        assign scheme_error = '#dc143c'
+        assign scheme_border = '#f4a460'
+      when 'forest_green'
+        assign scheme_bg = '#f0fff0'
+        assign scheme_fg = '#0f2f0f'
+        assign scheme_primary = '#228b22'
+        assign scheme_secondary = '#556b2f'
+        assign scheme_accent = '#32cd32'
+        assign scheme_success = '#00ff00'
+        assign scheme_warning = '#ffa500'
+        assign scheme_error = '#ff6347'
+        assign scheme_border = '#98fb98'
+      when 'royal_purple'
+        assign scheme_bg = '#faf8ff'
+        assign scheme_fg = '#2d1b3d'
+        assign scheme_primary = '#663399'
+        assign scheme_secondary = '#9370db'
+        assign scheme_accent = '#da70d6'
+        assign scheme_success = '#32cd32'
+        assign scheme_warning = '#ffa500'
+        assign scheme_error = '#ff6347'
+        assign scheme_border = '#ddd0e8'
+      else
+        assign scheme_bg = settings.background_color
+        assign scheme_fg = settings.foreground_color
+        assign scheme_primary = settings.color_primary
+        assign scheme_secondary = settings.color_secondary
+        assign scheme_accent = settings.color_accent
+        assign scheme_success = settings.color_success
+        assign scheme_warning = settings.color_warning
+        assign scheme_error = settings.color_error
+        assign scheme_border = settings.color_border
+    endcase
+  %}
+
+  :root {
+    /* Project-Dream Color Palette */
+    --color-background: {{ scheme_bg | default: '#ffffff' }};
+    --color-foreground: {{ scheme_fg | default: '#1a1a1a' }};
+    --color-primary: {{ scheme_primary | default: '#000000' }};
+    --color-secondary: {{ scheme_secondary | default: '#666666' }};
+    --color-accent: {{ scheme_accent | default: '#ff4545' }};
+    --color-success: {{ scheme_success | default: '#00d26a' }};
+    --color-warning: {{ scheme_warning | default: '#ffa500' }};
+    --color-error: {{ scheme_error | default: '#ff4545' }};
+    --color-border: {{ scheme_border | default: '#e5e5e5' }};
+    --color-media-bg: {{ scheme_border | default: '#f5f5f5' }};
+    
+    /* Button Colors */
+    --color-button-primary-bg: {{ settings.color_button_primary_bg | default: scheme_primary | default: '#000000' }};
+    --color-button-primary-text: {{ settings.color_button_primary_text | default: '#ffffff' }};
+    --color-button-primary-bg-hover: {{ settings.color_button_primary_bg_hover | default: scheme_secondary | default: '#333333' }};
+    --color-button-secondary-text: {{ scheme_primary | default: '#000000' }};
+    
+    /* Conversion Elements */
+    --urgency-color: {{ scheme_accent | default: '#ff4545' }};
   }
 {% endstyle %}

@@ -1,0 +1,56 @@
+{%- comment -%}
+  Renders an urgency countdown timer
+  
+  Accepts:
+  - end_date: string - The end date/time in YYYY-MM-DD HH:MM format
+  - text: string - Text to display before the timer
+  - show_seconds: boolean - Whether to show seconds (default: true)
+  - style: string - 'compact' or 'standard' (default: 'standard')
+  
+  Usage:
+  {% render 'urgency-timer', end_date: '2024-12-31 23:59', text: 'Sale ends in:', style: 'compact' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign current_time = 'now' | date: '%s'
+  assign end_timestamp = end_date | date: '%s'
+  assign time_remaining = end_timestamp | minus: current_time
+-%}
+
+{%- if time_remaining > 0 -%}
+  <div class="urgency-timer urgency-timer--{{ style | default: 'standard' }}" data-urgency-timer data-end-time="{{ end_timestamp }}">
+    {%- if text != blank -%}
+      <span class="urgency-timer__text">{{ text }}</span>
+    {%- endif -%}
+    
+    <div class="urgency-timer__countdown">
+      <div class="urgency-timer__unit">
+        <span class="urgency-timer__number" data-days>00</span>
+        <span class="urgency-timer__label">Days</span>
+      </div>
+      
+      <div class="urgency-timer__separator">:</div>
+      
+      <div class="urgency-timer__unit">
+        <span class="urgency-timer__number" data-hours>00</span>
+        <span class="urgency-timer__label">Hours</span>
+      </div>
+      
+      <div class="urgency-timer__separator">:</div>
+      
+      <div class="urgency-timer__unit">
+        <span class="urgency-timer__number" data-minutes>00</span>
+        <span class="urgency-timer__label">Minutes</span>
+      </div>
+      
+      {%- if show_seconds != false -%}
+        <div class="urgency-timer__separator">:</div>
+        
+        <div class="urgency-timer__unit">
+          <span class="urgency-timer__number" data-seconds>00</span>
+          <span class="urgency-timer__label">Seconds</span>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
