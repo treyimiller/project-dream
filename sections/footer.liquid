@@ -1,56 +1,811 @@
-<footer>
-  <div class="footer__copyright">
-    &copy;
-    {{ 'now' | date: '%Y' }}
-    {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
-  </div>
+{% comment %}
+  Enhanced Footer for Project-Dream theme
+  Designed for dropshipping conversion and trust building
+{% endcomment %}
 
-  <div class="footer__links">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
-
-  <div class="footer__payment">
-    {% if section.settings.show_payment_icons %}
-      {% for type in shop.enabled_payment_types %}
-        {{ type | payment_type_svg_tag }}
-      {% endfor %}
+<footer class="footer" role="contentinfo">
+  <div class="footer-container">
+    
+    {% comment %} Newsletter Signup {% endcomment %}
+    {% if section.settings.show_newsletter %}
+      <div class="footer-newsletter">
+        <div class="newsletter-content">
+          <h3 class="newsletter-title">{{ section.settings.newsletter_title | default: 'Stay Connected' }}</h3>
+          <p class="newsletter-description">{{ section.settings.newsletter_description | default: 'Get exclusive deals and updates' }}</p>
+          
+          <form action="/contact#newsletter" method="post" class="newsletter-form" novalidate>
+            <input type="hidden" name="form_type" value="customer">
+            <input type="hidden" name="utf8" value="✓">
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            
+            <div class="newsletter-input-group">
+              <input 
+                type="email" 
+                name="contact[email]" 
+                placeholder="{{ section.settings.email_placeholder | default: 'Enter your email' }}"
+                class="newsletter-input"
+                required
+                autocomplete="email"
+              >
+              <button type="submit" class="newsletter-button">
+                {{ section.settings.subscribe_button | default: 'Subscribe' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     {% endif %}
+
+    {% comment %} Main Footer Content {% endcomment %}
+    <div class="footer-main">
+      
+      {% comment %} Company Info {% endcomment %}
+      <div class="footer-section footer-company">
+        {% if section.settings.logo %}
+          <div class="footer-logo">
+            <img src="{{ section.settings.logo | img_url: '200x' }}" 
+                 alt="{{ shop.name }}" 
+                 loading="lazy"
+                 class="footer-logo-image">
+          </div>
+        {% else %}
+          <h3 class="footer-company-name">{{ shop.name }}</h3>
+        {% endif %}
+        
+        {% if section.settings.company_description != blank %}
+          <p class="footer-description">{{ section.settings.company_description }}</p>
+        {% endif %}
+
+        {% comment %} Social Media Links {% endcomment %}
+        {% if section.settings.show_social %}
+          <div class="footer-social">
+            {% if settings.social_instagram != blank %}
+              <a href="{{ settings.social_instagram }}" class="social-link" aria-label="Instagram" target="_blank" rel="noopener">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+            {% endif %}
+            {% if settings.social_tiktok != blank %}
+              <a href="{{ settings.social_tiktok }}" class="social-link" aria-label="TikTok" target="_blank" rel="noopener">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.321 5.562a5.122 5.122 0 0 1-.443-.258 6.228 6.228 0 0 1-1.137-.966c-.849-.849-1.293-1.863-1.491-2.617C16.117 1.23 16.056.813 16.056.813V.78h-3.011v13.593c0 .986-.351 1.888-.93 2.604a4.729 4.729 0 0 1-2.604 1.793c-.598.187-1.23.281-1.896.281-2.604 0-4.729-2.125-4.729-4.729s2.125-4.729 4.729-4.729c.315 0 .621.037.911.107v-3.073a7.715 7.715 0 0 0-.911-.07C3.696 6.557 0 10.253 0 14.672s3.696 8.115 8.115 8.115 8.115-3.696 8.115-8.115V8.787c1.230.849 2.697 1.344 4.278 1.344v-3.011c-1.230 0-2.351-.351-3.187-1.558z"/>
+                </svg>
+              </a>
+            {% endif %}
+            {% if settings.social_facebook != blank %}
+              <a href="{{ settings.social_facebook }}" class="social-link" aria-label="Facebook" target="_blank" rel="noopener">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+            {% endif %}
+            {% if settings.social_youtube != blank %}
+              <a href="{{ settings.social_youtube }}" class="social-link" aria-label="YouTube" target="_blank" rel="noopener">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+            {% endif %}
+            {% if settings.social_twitter != blank %}
+              <a href="{{ settings.social_twitter }}" class="social-link" aria-label="Twitter" target="_blank" rel="noopener">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                </svg>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+      {% comment %} Quick Links {% endcomment %}
+      {% if section.settings.menu != blank %}
+        <div class="footer-section footer-links">
+          <h3 class="footer-section-title">{{ section.settings.links_title | default: 'Quick Links' }}</h3>
+          <ul class="footer-menu">
+            {% for link in section.settings.menu.links %}
+              <li class="footer-menu-item">
+                <a href="{{ link.url }}" class="footer-menu-link">{{ link.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {% comment %} Customer Service {% endcomment %}
+      <div class="footer-section footer-support">
+        <h3 class="footer-section-title">{{ section.settings.support_title | default: 'Customer Service' }}</h3>
+        <ul class="footer-menu">
+          {% if section.settings.contact_email != blank %}
+            <li class="footer-menu-item">
+              <a href="mailto:{{ section.settings.contact_email }}" class="footer-menu-link">
+                {{ section.settings.contact_email }}
+              </a>
+            </li>
+          {% endif %}
+          {% if section.settings.contact_phone != blank %}
+            <li class="footer-menu-item">
+              <a href="tel:{{ section.settings.contact_phone }}" class="footer-menu-link">
+                {{ section.settings.contact_phone }}
+              </a>
+            </li>
+          {% endif %}
+          {% if section.settings.support_hours != blank %}
+            <li class="footer-menu-item">
+              <span class="footer-menu-text">{{ section.settings.support_hours }}</span>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+
+      {% comment %} Trust & Guarantees {% endcomment %}
+      <div class="footer-section footer-trust">
+        <h3 class="footer-section-title">{{ section.settings.trust_title | default: 'Why Shop With Us' }}</h3>
+        <ul class="footer-trust-list">
+          {% if section.settings.free_shipping %}
+            <li class="footer-trust-item">
+              <span class="trust-icon">🚚</span>
+              <span class="trust-text">{{ section.settings.free_shipping_text | default: 'Free Shipping Over $50' }}</span>
+            </li>
+          {% endif %}
+          {% if section.settings.money_back %}
+            <li class="footer-trust-item">
+              <span class="trust-icon">↩️</span>
+              <span class="trust-text">{{ section.settings.money_back_text | default: '30-Day Money Back' }}</span>
+            </li>
+          {% endif %}
+          {% if section.settings.secure_payment %}
+            <li class="footer-trust-item">
+              <span class="trust-icon">🔒</span>
+              <span class="trust-text">{{ section.settings.secure_payment_text | default: 'Secure SSL Payment' }}</span>
+            </li>
+          {% endif %}
+          {% if section.settings.customer_support %}
+            <li class="footer-trust-item">
+              <span class="trust-icon">💬</span>
+              <span class="trust-text">{{ section.settings.customer_support_text | default: '24/7 Customer Support' }}</span>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    {% comment %} Payment Icons & Trust Badges {% endcomment %}
+    {% if section.settings.show_payment_icons or section.settings.show_trust_badges %}
+      <div class="footer-payment-trust">
+        {% if section.settings.show_payment_icons %}
+          <div class="footer-payment">
+            <h4 class="payment-title">{{ section.settings.payment_title | default: 'We Accept' }}</h4>
+            <div class="payment-icons">
+              {% for type in shop.enabled_payment_types %}
+                {{ type | payment_type_svg_tag: class: 'payment-icon' }}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_trust_badges %}
+          <div class="footer-trust-badges">
+            {% render 'trust-badges', style: 'footer' %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% comment %} Copyright & Legal {% endcomment %}
+    <div class="footer-bottom">
+      <div class="footer-copyright">
+        <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ section.settings.copyright_text | default: 'All rights reserved.' }}</p>
+      </div>
+      
+      {% if section.settings.legal_menu != blank %}
+        <div class="footer-legal">
+          {% for link in section.settings.legal_menu.links %}
+            <a href="{{ link.url }}" class="footer-legal-link">{{ link.title }}</a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
   </div>
 </footer>
 
 {% stylesheet %}
-  footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-  }
-  footer a {
-    text-decoration: none;
+  .footer {
+    background-color: var(--color-background-secondary, #f8f9fa);
     color: var(--color-foreground);
+    margin-top: var(--space-3xl);
+    border-top: 1px solid var(--color-border);
   }
-  footer .footer__links,
-  footer .footer__payment {
+
+  .footer-container {
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--mobile-padding);
+  }
+
+  /* Newsletter Section */
+  .footer-newsletter {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    color: white;
+    padding: var(--space-xl);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: var(--space-2xl);
+    text-align: center;
+  }
+
+  .newsletter-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-sm);
+  }
+
+  .newsletter-description {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--space-lg);
+    opacity: 0.9;
+  }
+
+  .newsletter-input-group {
     display: flex;
-    gap: 1rem;
+    max-width: 400px;
+    margin: 0 auto;
+    gap: var(--space-sm);
+  }
+
+  .newsletter-input {
+    flex: 1;
+    padding: var(--space-md);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+  }
+
+  .newsletter-button {
+    padding: var(--space-md) var(--space-lg);
+    background-color: white;
+    color: var(--color-primary);
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+  }
+
+  .newsletter-button:hover {
+    background-color: var(--color-background);
+    transform: translateY(-1px);
+  }
+
+  /* Main Footer Content */
+  .footer-main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .footer-section {
+    text-align: center;
+  }
+
+  .footer-section-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-md);
+    color: var(--color-primary);
+  }
+
+  /* Company Section */
+  .footer-company {
+    margin-bottom: var(--space-lg);
+  }
+
+  .footer-logo {
+    margin-bottom: var(--space-md);
+  }
+
+  .footer-logo-image {
+    max-height: 60px;
+    width: auto;
+  }
+
+  .footer-company-name {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-md);
+    color: var(--color-primary);
+  }
+
+  .footer-description {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-md);
+    line-height: 1.5;
+  }
+
+  /* Social Links */
+  .footer-social {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-md);
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .social-link:hover {
+    background-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+
+  /* Footer Menus */
+  .footer-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-menu-item {
+    margin-bottom: var(--space-sm);
+  }
+
+  .footer-menu-link {
+    color: var(--color-foreground);
+    text-decoration: none;
+    font-size: var(--font-size-base);
+    transition: color var(--transition-fast);
+  }
+
+  .footer-menu-link:hover {
+    color: var(--color-primary);
+  }
+
+  .footer-menu-text {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+  }
+
+  /* Trust Section */
+  .footer-trust-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-trust-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-size-sm);
+  }
+
+  .trust-icon {
+    font-size: var(--font-size-lg);
+  }
+
+  .trust-text {
+    color: var(--color-text-secondary);
+  }
+
+  /* Payment & Trust Badges */
+  .footer-payment-trust {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+    padding: var(--space-xl) 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-xl);
+  }
+
+  .footer-payment {
+    text-align: center;
+  }
+
+  .payment-title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: var(--space-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .payment-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  .payment-icon {
+    height: 24px;
+    width: auto;
+    opacity: 0.7;
+    transition: opacity var(--transition-fast);
+  }
+
+  .payment-icon:hover {
+    opacity: 1;
+  }
+
+  /* Footer Bottom */
+  .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+  }
+
+  .footer-copyright {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .footer-legal {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+  }
+
+  .footer-legal-link {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .footer-legal-link:hover {
+    color: var(--color-primary);
+  }
+
+  /* Mobile Newsletter Input */
+  @media (max-width: 480px) {
+    .newsletter-input-group {
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .newsletter-button {
+      width: 100%;
+    }
+  }
+
+  /* Tablet and Desktop Styles */
+  @media (min-width: 768px) {
+    .footer-main {
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      text-align: left;
+    }
+
+    .footer-company {
+      margin-bottom: 0;
+    }
+
+    .footer-section {
+      text-align: left;
+    }
+
+    .footer-social {
+      justify-content: flex-start;
+    }
+
+    .footer-trust-item {
+      justify-content: flex-start;
+    }
+
+    .footer-payment-trust {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .footer-bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .footer-container {
+      padding: var(--space-3xl) var(--page-margin);
+    }
+
+    .footer-main {
+      gap: var(--space-2xl);
+    }
   }
 {% endstylesheet %}
 
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function() {
+    const newsletterForm = document.querySelector('.newsletter-form');
+    
+    if (newsletterForm) {
+      newsletterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const email = formData.get('contact[email]');
+        const button = this.querySelector('.newsletter-button');
+        const originalText = button.textContent;
+        
+        // Basic email validation
+        if (!email || !email.includes('@')) {
+          button.textContent = 'Invalid Email';
+          button.style.backgroundColor = '#ff4545';
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.style.backgroundColor = '';
+          }, 2000);
+          return;
+        }
+        
+        // Show loading state
+        button.textContent = 'Subscribing...';
+        button.disabled = true;
+        
+        // Submit form
+        fetch('/contact', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => {
+          if (response.ok) {
+            button.textContent = 'Subscribed!';
+            button.style.backgroundColor = '#28a745';
+            this.reset();
+            
+            // Track conversion
+            if (typeof gtag !== 'undefined') {
+              gtag('event', 'newsletter_signup', {
+                event_category: 'engagement',
+                event_label: 'footer_newsletter'
+              });
+            }
+          } else {
+            throw new Error('Subscription failed');
+          }
+        })
+        .catch(error => {
+          console.error('Newsletter signup error:', error);
+          button.textContent = 'Try Again';
+          button.style.backgroundColor = '#ff4545';
+        })
+        .finally(() => {
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.style.backgroundColor = '';
+            button.disabled = false;
+          }, 3000);
+        });
+      });
+    }
+  });
+{% endjavascript %}
+
 {% schema %}
 {
-  "name": "t:general.footer",
+  "name": "Footer",
+  "tag": "section",
+  "class": "section",
   "settings": [
+    {
+      "type": "header",
+      "content": "Company Information"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Footer logo"
+    },
+    {
+      "type": "textarea",
+      "id": "company_description",
+      "label": "Company description",
+      "default": "Your trusted partner for quality products and exceptional service."
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter signup",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_title",
+      "label": "Newsletter title",
+      "default": "Stay Connected"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_description",
+      "label": "Newsletter description",
+      "default": "Get exclusive deals and updates"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_button",
+      "label": "Subscribe button text",
+      "default": "Subscribe"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
     {
       "type": "link_list",
       "id": "menu",
-      "label": "t:labels.menu"
+      "label": "Footer menu",
+      "default": "footer"
+    },
+    {
+      "type": "text",
+      "id": "links_title",
+      "label": "Links section title",
+      "default": "Quick Links"
+    },
+    {
+      "type": "header",
+      "content": "Customer Service"
+    },
+    {
+      "type": "text",
+      "id": "support_title",
+      "label": "Support section title",
+      "default": "Customer Service"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Contact email",
+      "default": "support@example.com"
+    },
+    {
+      "type": "text",
+      "id": "contact_phone",
+      "label": "Contact phone",
+      "default": "+1 (555) 123-4567"
+    },
+    {
+      "type": "text",
+      "id": "support_hours",
+      "label": "Support hours",
+      "default": "Mon-Fri 9AM-6PM EST"
+    },
+    {
+      "type": "header",
+      "content": "Trust & Guarantees"
+    },
+    {
+      "type": "text",
+      "id": "trust_title",
+      "label": "Trust section title",
+      "default": "Why Shop With Us"
+    },
+    {
+      "type": "checkbox",
+      "id": "free_shipping",
+      "label": "Show free shipping",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "free_shipping_text",
+      "label": "Free shipping text",
+      "default": "Free Shipping Over $50"
+    },
+    {
+      "type": "checkbox",
+      "id": "money_back",
+      "label": "Show money back guarantee",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "money_back_text",
+      "label": "Money back text",
+      "default": "30-Day Money Back"
+    },
+    {
+      "type": "checkbox",
+      "id": "secure_payment",
+      "label": "Show secure payment",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "secure_payment_text",
+      "label": "Secure payment text",
+      "default": "Secure SSL Payment"
+    },
+    {
+      "type": "checkbox",
+      "id": "customer_support",
+      "label": "Show customer support",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "customer_support_text",
+      "label": "Customer support text",
+      "default": "24/7 Customer Support"
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show social media links",
+      "default": true,
+      "info": "Links are configured in theme settings"
+    },
+    {
+      "type": "header",
+      "content": "Payment & Trust"
     },
     {
       "type": "checkbox",
       "id": "show_payment_icons",
-      "label": "t:labels.show_payment_icons",
+      "label": "Show payment icons",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "payment_title",
+      "label": "Payment section title",
+      "default": "We Accept"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_badges",
+      "label": "Show trust badges",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Copyright & Legal"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright text",
+      "default": "All rights reserved."
+    },
+    {
+      "type": "link_list",
+      "id": "legal_menu",
+      "label": "Legal menu",
+      "info": "Links to privacy policy, terms of service, etc."
     }
   ]
 }
