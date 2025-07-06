@@ -1,0 +1,119 @@
+{% comment %}
+  Template Selector - Allows switching between homepage layouts
+{% endcomment %}
+
+{% if section.settings.template_type == 'single' %}
+  {% comment %} Single Product Layout {% endcomment %}
+  
+  {% section 'hero' %}
+  {% section 'icon-features' %}
+  {% section 'image-with-text' %}
+  {% section 'testimonials' %}
+  {% section 'faq' %}
+  {% section 'cta-banner' %}
+
+{% elsif section.settings.template_type == 'multi' %}
+  {% comment %} Multi Product Layout {% endcomment %}
+  
+  {% section 'slideshow' %}
+  {% section 'featured-collection' %}
+  {% section 'image-with-text' %}
+  {% section 'featured-collection' %}
+  {% section 'testimonials' %}
+  {% section 'cta-banner' %}
+
+{% else %}
+  {% comment %} Default Layout {% endcomment %}
+  
+  <div class="template-selector-notice">
+    <div class="container">
+      <h2>Select Your Homepage Layout</h2>
+      <p>Choose between Single Product Focus or Multi Product Store in the section settings.</p>
+      
+      <div class="layout-options">
+        <div class="option">
+          <h3>🎯 Single Product Focus</h3>
+          <p>Perfect for dropshipping stores focusing on one hero product with testimonials, FAQ, and urgency tools.</p>
+        </div>
+        
+        <div class="option">
+          <h3>🛒 Multi Product Store</h3>
+          <p>Ideal for stores with multiple collections featuring slideshow, collections, and brand story.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .template-selector-notice {
+    padding: 4rem 2rem;
+    background: var(--color-background-secondary, #f8f9fa);
+    text-align: center;
+  }
+  
+  .layout-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .option {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .option h3 {
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Template Selector",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Homepage Layout"
+    },
+    {
+      "type": "select",
+      "id": "template_type",
+      "label": "Layout Type",
+      "options": [
+        {
+          "value": "default",
+          "label": "Selection Guide"
+        },
+        {
+          "value": "single",
+          "label": "Single Product Focus"
+        },
+        {
+          "value": "multi",
+          "label": "Multi Product Store"
+        }
+      ],
+      "default": "default",
+      "info": "Choose your homepage layout type"
+    },
+    {
+      "type": "paragraph",
+      "content": "**Single Product**: Hero, Features, Product Showcase, Testimonials, FAQ, CTA"
+    },
+    {
+      "type": "paragraph", 
+      "content": "**Multi Product**: Slideshow, Collections, Brand Story, Testimonials, Newsletter"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Template Selector"
+    }
+  ]
+}
+{% endschema %}

@@ -1,14 +1,13 @@
 {
   "sections": {
-    "hero_section": {
-      "type": "hero"
-    },
-    "guide_section": {
-      "type": "template-guide"
+    "template_selector": {
+      "type": "template-selector",
+      "settings": {
+        "template_type": "default"
+      }
     }
   },
   "order": [
-    "hero_section",
-    "guide_section"
+    "template_selector"
   ]
 }
