@@ -12,19 +12,10 @@
     "header": {
       "type": "header",
       "settings": {}
-    },
-    "template-selector": {
-      "type": "template-selector",
-      "settings": {
-        "current_template": "default",
-        "show_template_info": true,
-        "enable_quick_switch": true
-      }
     }
   },
   "order": [
     "announcement-bar",
-    "header",
-    "template-selector"
+    "header"
   ]
 }
