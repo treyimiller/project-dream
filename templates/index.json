@@ -1,32 +1,10 @@
 {
   "sections": {
-    "hero": {
-      "type": "hero",
-      "settings": {
-        "height": "full",
-        "full_width": true,
-        "overlay_opacity": 40,
-        "heading": "Welcome to Project-Dream",
-        "subheading": "<p>Choose between single-product or multi-product layout in the template selector</p>",
-        "button_label": "Shop Now",
-        "button_link": "/collections/all",
-        "text_alignment": "center",
-        "show_scroll_indicator": true
-      }
-    },
-    "template_guide": {
-      "type": "template-guide",
-      "settings": {
-        "heading": "How to Switch Between Templates",
-        "content": "To use Single Product Focus layout:\n1. Click the page selector dropdown (says 'Home page' at the top)\n2. Click 'Change template' link below it\n3. Select 'index.single-product'\n4. Click 'Change' to apply\n\nTo use Multi Product Store layout:\n1. Click the page selector dropdown\n2. Click 'Change template'\n3. Select 'index.multi-product'\n4. Click 'Change' to apply",
-        "text_alignment": "left",
-        "show_templates": true,
-        "full_width": false
-      }
+    "hero_section": {
+      "type": "hero"
     }
   },
   "order": [
-    "hero",
-    "template_guide"
+    "hero_section"
   ]
 }
