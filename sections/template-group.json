@@ -1,0 +1,17 @@
+{
+  "type": "template",
+  "name": "Template",
+  "sections": {
+    "template-selector": {
+      "type": "template-selector",
+      "settings": {
+        "current_template": "default",
+        "show_template_info": true,
+        "enable_quick_switch": true
+      }
+    }
+  },
+  "order": [
+    "template-selector"
+  ]
+}

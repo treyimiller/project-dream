@@ -1,5 +1,13 @@
 {
   "sections": {
+    "template_switcher": {
+      "type": "template-switcher",
+      "settings": {
+        "title": "Choose Your Homepage Layout",
+        "description": "Select the homepage template that best fits your business model. Each template is optimized for different selling strategies.",
+        "show_instructions": true
+      }
+    },
     "theme_showcase": {
       "type": "theme-showcase",
       "settings": {
@@ -16,6 +24,7 @@
     }
   },
   "order": [
+    "template_switcher",
     "theme_showcase"
   ]
 }
