@@ -2,9 +2,13 @@
   "sections": {
     "hero_section": {
       "type": "hero"
+    },
+    "guide_section": {
+      "type": "template-guide"
     }
   },
   "order": [
-    "hero_section"
+    "hero_section",
+    "guide_section"
   ]
 }
