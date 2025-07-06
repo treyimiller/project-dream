@@ -1,26 +1,21 @@
 {
   "sections": {
-    "sidebar_layout": {
-      "type": "sidebar-layout",
-      "blocks": {
-        "theme_showcase_block": {
-          "type": "theme-showcase",
-          "settings": {
-            "heading": "Project-Dream Theme",
-            "description": "The Ultimate Shopify Theme Engineered for Mobile-First Dropshipping Success. Built from the ground up with a singular focus: converting mobile traffic from social platforms like TikTok and Instagram into sales."
-          }
-        }
-      },
-      "block_order": ["theme_showcase_block"],
+    "theme_showcase": {
+      "type": "theme-showcase",
       "settings": {
-        "show_layout_switcher": true,
-        "show_color_scheme_picker": false,
-        "show_font_picker": false,
-        "sidebar_content": "<h4>Choose Your Style</h4><p>Use the layout switcher to preview different homepage configurations. Switch between single product focus for dropshipping or multi-product collections for variety stores.</p>"
+        "hero_title": "Project-Dream Theme",
+        "hero_subtitle": "The Ultimate Shopify Theme Engineered for Mobile-First Dropshipping Success. Built from the ground up with a singular focus: converting mobile traffic from social platforms like TikTok and Instagram into sales.",
+        "color_scheme": "ocean-breeze",
+        "primary_cta": "Explore Color Schemes",
+        "secondary_cta": "Try Font Pairings",
+        "final_cta_title": "Ready to Launch Your Dream Store?",
+        "final_cta_subtitle": "Join thousands of successful dropshippers using Project-Dream to build professional, high-converting storefronts in minutes.",
+        "final_cta_text": "Get Started Today",
+        "final_cta_url": "/collections/all"
       }
     }
   },
   "order": [
-    "sidebar_layout"
+    "theme_showcase"
   ]
 }
