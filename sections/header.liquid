@@ -1,440 +1,360 @@
-<header class="header{% if section.settings.sticky_header %} header--sticky{% endif %}{% if section.settings.transparent_header %} header--transparent{% endif %}">
-  <div class="header__wrapper">
-    <!-- Mobile Menu Toggle -->
-    <button class="header__menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
-      <span class="header__menu-icon">
-        <span></span>
-        <span></span>
-        <span></span>
-      </span>
-    </button>
+{% comment %}
+  Enhanced Header for Project-Dream theme
+  Designed for dropshipping conversion and navigation
+{% endcomment %}
 
-    <!-- Logo -->
-    <div class="header__logo{% if section.settings.logo_position == 'center' %} header__logo--center{% endif %}">
-      {%- if section.settings.logo != blank -%}
-        <a href="{{ routes.root_url }}" class="header__logo-link">
-          <img src="{{ section.settings.logo | img_url: '300x' }}"
-               alt="{{ shop.name }}"
-               loading="lazy"
-               width="{{ section.settings.logo_width }}"
-               class="header__logo-image">
-        </a>
-      {%- else -%}
-        <a href="{{ routes.root_url }}" class="header__logo-text">
-          {{ shop.name }}
-        </a>
-      {%- endif -%}
+<header class="header{% if section.settings.sticky_header %} header--sticky{% endif %}{% if section.settings.transparent_header %} header--transparent{% endif %}" role="banner">
+  <div class="header-container">
+    
+    {% comment %} Top Bar with Promotions {% endcomment %}
+    {% if section.settings.show_top_bar %}
+      <div class="header-top-bar">
+        <div class="top-bar-content">
+          {% if section.settings.promo_text != blank %}
+            <p class="promo-text">{{ section.settings.promo_text }}</p>
+          {% endif %}
+          
+          {% if section.settings.show_contact_info %}
+            <div class="contact-info">
+              {% if section.settings.contact_phone != blank %}
+                <a href="tel:{{ section.settings.contact_phone }}" class="contact-link">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                  </svg>
+                  {{ section.settings.contact_phone }}
+                </a>
+              {% endif %}
+              {% if section.settings.contact_email != blank %}
+                <a href="mailto:{{ section.settings.contact_email }}" class="contact-link">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                  </svg>
+                  {{ section.settings.contact_email }}
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% comment %} Main Header Content {% endcomment %}
+    <div class="header-main">
+      
+      {% comment %} Mobile Menu Toggle {% endcomment %}
+      <button class="header-menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="menu-icon">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+
+      {% comment %} Logo {% endcomment %}
+      <div class="header-section header-logo">
+        {% if section.settings.logo %}
+          <a href="{{ routes.root_url }}" class="logo-link">
+            <img src="{{ section.settings.logo | img_url: '300x' }}" 
+                 alt="{{ shop.name }}" 
+                 loading="lazy"
+                 width="{{ section.settings.logo_width }}"
+                 class="logo-image">
+          </a>
+        {% else %}
+          <a href="{{ routes.root_url }}" class="logo-text">{{ shop.name }}</a>
+        {% endif %}
+      </div>
+
+      {% comment %} Navigation Menu {% endcomment %}
+      {% if section.settings.menu != blank %}
+        <nav class="header-section header-nav" role="navigation">
+          <ul class="nav-list">
+            {% for link in section.settings.menu.links %}
+              <li class="nav-item">
+                <a href="{{ link.url }}" class="nav-link">{{ link.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+      {% endif %}
+
+      {% comment %} Header Actions {% endcomment %}
+      <div class="header-section header-actions">
+        
+        <!-- Search Icon -->
+        {% if section.settings.show_search %}
+          <button class="header-action search-toggle" aria-label="Search">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+          </button>
+        {% endif %}
+
+        <!-- Account Icon -->
+        {% if section.settings.show_account and shop.customer_accounts_enabled %}
+          <a href="{{ routes.account_url }}" class="header-action account-link" aria-label="Account">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </a>
+        {% endif %}
+
+        <!-- Cart Icon -->
+        {% if section.settings.show_cart %}
+          <a href="{{ routes.cart_url }}" class="header-action cart-link" aria-label="Cart">
+            <span class="cart-count{% if cart.item_count == 0 %} cart-count--hidden{% endif %}" data-cart-count>
+              {{ cart.item_count }}
+            </span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+          </a>
+        {% endif %}
+
+        <!-- Social Media Links -->
+        {% if section.settings.show_social %}
+          <div class="header-social">
+            {% if settings.social_instagram != blank %}
+              <a href="{{ settings.social_instagram }}" class="social-link" aria-label="Instagram" target="_blank" rel="noopener">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+            {% endif %}
+            {% if settings.social_tiktok != blank %}
+              <a href="{{ settings.social_tiktok }}" class="social-link" aria-label="TikTok" target="_blank" rel="noopener">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.321 5.562a5.122 5.122 0 0 1-.443-.258 6.228 6.228 0 0 1-1.137-.966c-.849-.849-1.293-1.863-1.491-2.617C16.117 1.23 16.056.813 16.056.813V.78h-3.011v13.593c0 .986-.351 1.888-.93 2.604a4.729 4.729 0 0 1-2.604 1.793c-.598.187-1.23.281-1.896.281-2.604 0-4.729-2.125-4.729-4.729s2.125-4.729 4.729-4.729c.315 0 .621.037.911.107v-3.073a7.715 7.715 0 0 0-.911-.07C3.696 6.557 0 10.253 0 14.672s3.696 8.115 8.115 8.115 8.115-3.696 8.115-8.115V8.787c1.230.849 2.697 1.344 4.278 1.344v-3.011c-1.230 0-2.351-.351-3.187-1.558z"/>
+                </svg>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
     </div>
 
-    <!-- Desktop Navigation -->
-    <nav class="header__nav" role="navigation">
-      <ul class="header__menu-list">
-        {%- for link in section.settings.menu.links -%}
-          <li class="header__menu-item">
-            <a href="{{ link.url }}" class="header__menu-link">
-              {{ link.title }}
+    {% comment %} Trust Signals Bar {% endcomment %}
+    {% if section.settings.show_trust_bar %}
+      <div class="header-trust-bar">
+        <div class="trust-signals">
+          {% if section.settings.free_shipping %}
+            <div class="trust-signal">
+              <span class="trust-icon">🚚</span>
+              <span class="trust-text">{{ section.settings.free_shipping_text | default: 'Free Shipping Over $50' }}</span>
+            </div>
+          {% endif %}
+          {% if section.settings.money_back %}
+            <div class="trust-signal">
+              <span class="trust-icon">↩️</span>
+              <span class="trust-text">{{ section.settings.money_back_text | default: '30-Day Returns' }}</span>
+            </div>
+          {% endif %}
+          {% if section.settings.secure_checkout %}
+            <div class="trust-signal">
+              <span class="trust-icon">🔒</span>
+              <span class="trust-text">{{ section.settings.secure_checkout_text | default: 'Secure Checkout' }}</span>
+            </div>
+          {% endif %}
+          {% if section.settings.customer_support %}
+            <div class="trust-signal">
+              <span class="trust-icon">💬</span>
+              <span class="trust-text">{{ section.settings.customer_support_text | default: '24/7 Support' }}</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% comment %} Mobile Menu {% endcomment %}
+    <nav id="mobile-menu" class="mobile-menu" aria-hidden="true">
+      <div class="mobile-menu-wrapper">
+        <button class="mobile-menu-close" aria-label="Close menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+        
+        {% if section.settings.menu != blank %}
+          <ul class="mobile-nav-list">
+            {% for link in section.settings.menu.links %}
+              <li class="mobile-nav-item">
+                <a href="{{ link.url }}" class="mobile-nav-link">{{ link.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if section.settings.show_account and shop.customer_accounts_enabled %}
+          <div class="mobile-menu-footer">
+            <a href="{{ routes.account_url }}" class="mobile-account-link">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+              <span>Account</span>
             </a>
-          </li>
-        {%- endfor -%}
-      </ul>
+          </div>
+        {% endif %}
+      </div>
     </nav>
 
-    <!-- Icons -->
-    <div class="header__icons">
-      <!-- Search Icon -->
-      <button class="header__icon header__icon--search" aria-label="Search">
-        {{ 'icon-search.svg' | inline_asset_content }}
-      </button>
-
-      <!-- Account Icon -->
-      {%- if shop.customer_accounts_enabled -%}
-        <a href="{{ routes.account_url }}" class="header__icon header__icon--account" aria-label="Account">
-          {{ 'icon-account.svg' | inline_asset_content }}
-        </a>
-      {%- endif -%}
-
-      <!-- Cart Icon -->
-      <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart" aria-label="Cart">
-        <span class="header__cart-count{% if cart.item_count == 0 %} visually-hidden{% endif %}" data-cart-count>
-          {{ cart.item_count }}
-        </span>
-        {{ 'icon-cart.svg' | inline_asset_content }}
-      </a>
-    </div>
+    {% comment %} Mobile Menu Backdrop {% endcomment %}
+    <div class="mobile-menu-backdrop" aria-hidden="true"></div>
   </div>
-
-  <!-- Mobile Menu -->
-  <nav id="mobile-menu" class="mobile-menu" aria-hidden="true">
-    <div class="mobile-menu__wrapper">
-      <button class="mobile-menu__close" aria-label="Close menu">
-        {{ 'icon-close.svg' | inline_asset_content }}
-      </button>
-      
-      <ul class="mobile-menu__list">
-        {%- for link in section.settings.menu.links -%}
-          <li class="mobile-menu__item">
-            <a href="{{ link.url }}" class="mobile-menu__link">
-              {{ link.title }}
-            </a>
-          </li>
-        {%- endfor -%}
-      </ul>
-
-      {%- if shop.customer_accounts_enabled -%}
-        <div class="mobile-menu__footer">
-          <a href="{{ routes.account_url }}" class="mobile-menu__account-link">
-            {{ 'icon-account.svg' | inline_asset_content }}
-            <span>Account</span>
-          </a>
-        </div>
-      {%- endif -%}
-    </div>
-  </nav>
-
-  <!-- Mobile Menu Backdrop -->
-  <div class="mobile-menu__backdrop" aria-hidden="true"></div>
 </header>
 
-{% schema %}
-{
-  "name": "Header",
-  "settings": [
-    {
-      "type": "image_picker",
-      "id": "logo",
-      "label": "Logo"
-    },
-    {
-      "type": "range",
-      "id": "logo_width",
-      "label": "Logo width",
-      "min": 50,
-      "max": 300,
-      "step": 10,
-      "default": 150,
-      "unit": "px"
-    },
-    {
-      "type": "select",
-      "id": "logo_position",
-      "label": "Logo position",
-      "options": [
-        {
-          "value": "left",
-          "label": "Left"
-        },
-        {
-          "value": "center",
-          "label": "Center"
-        }
-      ],
-      "default": "left"
-    },
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu",
-      "default": "main-menu"
-    },
-    {
-      "type": "checkbox",
-      "id": "sticky_header",
-      "label": "Enable sticky header",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "transparent_header",
-      "label": "Transparent header on homepage",
-      "default": false
-    }
-  ]
-}
-{% endschema %}
-
 {% stylesheet %}
-/* Base Header Styles */
-.header {
-  background-color: var(--color-background);
-  border-bottom: 1px solid var(--color-border);
-  position: relative;
-  z-index: var(--z-index-sticky);
-}
-
-.header__wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 60px;
-  padding: 0 var(--page-margin);
-}
-
-/* Sticky Header */
-.header--sticky {
-  position: sticky;
-  top: 0;
-}
-
-/* Transparent Header */
-.header--transparent {
-  background-color: transparent;
-  border-bottom: none;
-  position: absolute;
-  width: 100%;
-  top: 0;
-}
-
-.header--transparent .header__logo-text,
-.header--transparent .header__menu-link,
-.header--transparent .header__icon {
-  color: #ffffff;
-}
-
-/* Logo Styles */
-.header__logo {
-  flex: 1;
-}
-
-.header__logo--center {
-  text-align: center;
-  flex: 0 0 auto;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.header__logo-link {
-  display: inline-block;
-}
-
-.header__logo-image {
-  height: auto;
-  max-height: 40px;
-  width: auto;
-}
-
-.header__logo-text {
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-decoration: none;
-  color: var(--color-foreground);
-}
-
-/* Mobile Menu Toggle */
-.header__menu-toggle {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.header__menu-icon {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 24px;
-}
-
-.header__menu-icon span {
-  display: block;
-  height: 2px;
-  background-color: var(--color-foreground);
-  transition: transform 0.3s ease;
-}
-
-/* Desktop Navigation - Hidden on Mobile */
-.header__nav {
-  display: none;
-}
-
-/* Icons */
-.header__icons {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.header__icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-foreground);
-  text-decoration: none;
-  position: relative;
-}
-
-.header__icon svg {
-  width: 24px;
-  height: 24px;
-}
-
-.header__icon--search {
-  display: none; /* Hidden on mobile to save space */
-}
-
-.header__cart-count {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background-color: var(--color-accent);
-  color: #ffffff;
-  font-size: 0.625rem;
-  font-weight: 600;
-  line-height: 1;
-  padding: 2px 4px;
-  border-radius: 10px;
-  min-width: 16px;
-  text-align: center;
-}
-
-/* Mobile Menu */
-.mobile-menu {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 80%;
-  max-width: 320px;
-  height: 100%;
-  background-color: var(--color-background);
-  transform: translateX(-100%);
-  transition: transform 0.3s ease;
-  z-index: var(--z-index-modal);
-  overflow-y: auto;
-}
-
-.mobile-menu[aria-hidden="false"] {
-  transform: translateX(0);
-}
-
-.mobile-menu__wrapper {
-  padding: 1rem;
-}
-
-.mobile-menu__close {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  margin-left: auto;
-  margin-bottom: 1rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-.mobile-menu__close svg {
-  width: 24px;
-  height: 24px;
-}
-
-.mobile-menu__list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.mobile-menu__item {
-  border-bottom: 1px solid var(--color-border);
-}
-
-.mobile-menu__link {
-  display: block;
-  padding: 1rem 0;
-  font-size: 1.125rem;
-  color: var(--color-foreground);
-  text-decoration: none;
-}
-
-.mobile-menu__footer {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--color-border);
-}
-
-.mobile-menu__account-link {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--color-foreground);
-  text-decoration: none;
-}
-
-.mobile-menu__account-link svg {
-  width: 20px;
-  height: 20px;
-}
-
-/* Mobile Menu Backdrop */
-.mobile-menu__backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  z-index: calc(var(--z-index-modal) - 1);
-}
-
-.mobile-menu__backdrop[aria-hidden="false"] {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Tablet and Desktop Styles */
-@media (min-width: 768px) {
-  .header__wrapper {
-    height: 80px;
+  .header {
+    background-color: var(--color-background);
+    border-bottom: 1px solid var(--color-border);
+    position: relative;
+    z-index: var(--z-index-sticky);
   }
 
-  .header__logo-image {
-    max-height: 50px;
+  .header--sticky {
+    position: sticky;
+    top: 0;
   }
 
-  .header__menu-toggle {
+  .header--transparent {
+    background-color: transparent;
+    border-bottom: none;
+    position: absolute;
+    width: 100%;
+    top: 0;
+  }
+
+  .header-container {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Top Bar */
+  .header-top-bar {
+    background-color: var(--color-primary);
+    color: white;
+    padding: var(--space-xs) var(--mobile-padding);
+    font-size: var(--font-size-sm);
+  }
+
+  .top-bar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: var(--page-width);
+    margin: 0 auto;
+  }
+
+  .promo-text {
+    margin: 0;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .contact-info {
+    display: flex;
+    gap: var(--space-md);
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: white;
+    text-decoration: none;
+    font-size: var(--font-size-xs);
+  }
+
+  .contact-link:hover {
+    opacity: 0.8;
+  }
+
+  /* Main Header */
+  .header-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md) var(--mobile-padding);
+    min-height: 60px;
+  }
+
+  .header-section {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Mobile Menu Toggle */
+  .header-menu-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .menu-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 24px;
+  }
+
+  .menu-icon span {
+    display: block;
+    height: 2px;
+    background-color: var(--color-foreground);
+    transition: transform 0.3s ease;
+  }
+
+  /* Logo */
+  .header-logo {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .logo-link {
+    display: inline-block;
+  }
+
+  .logo-image {
+    height: auto;
+    max-height: 40px;
+    width: auto;
+  }
+
+  .logo-text {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    text-decoration: none;
+    color: var(--color-foreground);
+  }
+
+  /* Navigation - Hidden on Mobile */
+  .header-nav {
     display: none;
   }
 
-  .header__nav {
-    display: block;
-    flex: 1;
-    margin: 0 2rem;
-  }
-
-  .header__menu-list {
+  .nav-list {
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 2rem;
+    gap: var(--space-lg);
     list-style: none;
     padding: 0;
     margin: 0;
   }
 
-  .header__menu-link {
+  .nav-link {
     color: var(--color-foreground);
     text-decoration: none;
-    font-weight: 500;
-    padding: 0.5rem 0;
+    font-weight: var(--font-weight-medium);
+    padding: var(--space-sm) 0;
     position: relative;
   }
 
-  .header__menu-link::after {
+  .nav-link::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -442,42 +362,266 @@
     width: 0;
     height: 2px;
     background-color: var(--color-accent);
-    transition: width 0.3s ease;
+    transition: width var(--transition-fast);
   }
 
-  .header__menu-link:hover::after {
+  .nav-link:hover::after {
     width: 100%;
   }
 
-  .header__icon--search {
+  /* Header Actions */
+  .header-actions {
+    gap: var(--space-sm);
+  }
+
+  .header-action {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-foreground);
+    text-decoration: none;
+    position: relative;
   }
 
-  .header__icons {
-    gap: 1rem;
+  .header-action:hover {
+    color: var(--color-primary);
   }
 
-  /* Hide mobile menu on desktop */
-  .mobile-menu,
-  .mobile-menu__backdrop {
+  .cart-count {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: var(--color-accent);
+    color: white;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 16px;
+    text-align: center;
+  }
+
+  .cart-count--hidden {
     display: none;
   }
-}
 
-/* Large Desktop */
-@media (min-width: 1200px) {
-  .header__menu-list {
-    gap: 3rem;
+  .header-social {
+    display: flex;
+    gap: var(--space-xs);
+    margin-left: var(--space-sm);
   }
-}
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: var(--color-foreground);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .social-link:hover {
+    color: var(--color-primary);
+  }
+
+  /* Trust Bar */
+  .header-trust-bar {
+    background-color: var(--color-background-secondary);
+    padding: var(--space-sm) var(--mobile-padding);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .trust-signals {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-lg);
+    max-width: var(--page-width);
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+
+  .trust-signal {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .trust-icon {
+    font-size: var(--font-size-base);
+  }
+
+  /* Mobile Menu */
+  .mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80%;
+    max-width: 320px;
+    height: 100%;
+    background-color: var(--color-background);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: var(--z-index-modal);
+    overflow-y: auto;
+  }
+
+  .mobile-menu[aria-hidden="false"] {
+    transform: translateX(0);
+  }
+
+  .mobile-menu-wrapper {
+    padding: var(--space-lg);
+  }
+
+  .mobile-menu-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-left: auto;
+    margin-bottom: var(--space-lg);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .mobile-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mobile-nav-item {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .mobile-nav-link {
+    display: block;
+    padding: var(--space-md) 0;
+    font-size: var(--font-size-lg);
+    color: var(--color-foreground);
+    text-decoration: none;
+  }
+
+  .mobile-menu-footer {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .mobile-account-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--color-foreground);
+    text-decoration: none;
+  }
+
+  /* Mobile Menu Backdrop */
+  .mobile-menu-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: calc(var(--z-index-modal) - 1);
+  }
+
+  .mobile-menu-backdrop[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Tablet and Desktop Styles */
+  @media (min-width: 768px) {
+    .header-main {
+      padding: var(--space-lg) var(--page-margin);
+      min-height: 80px;
+    }
+
+    .logo-image {
+      max-height: 50px;
+    }
+
+    .header-menu-toggle {
+      display: none;
+    }
+
+    .header-nav {
+      display: flex;
+      flex: 1;
+      justify-content: center;
+      margin: 0 var(--space-xl);
+    }
+
+    .header-actions {
+      gap: var(--space-md);
+    }
+
+    .contact-info {
+      display: flex;
+    }
+
+    .trust-signals {
+      gap: var(--space-2xl);
+    }
+
+    /* Hide mobile menu on desktop */
+    .mobile-menu,
+    .mobile-menu-backdrop {
+      display: none;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .contact-info {
+      display: none;
+    }
+
+    .header-social {
+      display: none;
+    }
+
+    .trust-signals {
+      gap: var(--space-sm);
+    }
+
+    .trust-signal {
+      font-size: var(--font-size-xs);
+    }
+  }
+
+  /* Large Desktop */
+  @media (min-width: 1200px) {
+    .nav-list {
+      gap: var(--space-2xl);
+    }
+  }
 {% endstylesheet %}
 
 {% javascript %}
 document.addEventListener('DOMContentLoaded', function() {
-  const menuToggle = document.querySelector('.header__menu-toggle');
+  const menuToggle = document.querySelector('.header-menu-toggle');
   const mobileMenu = document.getElementById('mobile-menu');
-  const menuClose = document.querySelector('.mobile-menu__close');
-  const menuBackdrop = document.querySelector('.mobile-menu__backdrop');
+  const menuClose = document.querySelector('.mobile-menu-close');
+  const menuBackdrop = document.querySelector('.mobile-menu-backdrop');
   const body = document.body;
 
   function openMenu() {
@@ -494,9 +638,9 @@ document.addEventListener('DOMContentLoaded', function() {
     body.style.overflow = '';
   }
 
-  menuToggle.addEventListener('click', openMenu);
-  menuClose.addEventListener('click', closeMenu);
-  menuBackdrop.addEventListener('click', closeMenu);
+  if (menuToggle) menuToggle.addEventListener('click', openMenu);
+  if (menuClose) menuClose.addEventListener('click', closeMenu);
+  if (menuBackdrop) menuBackdrop.addEventListener('click', closeMenu);
 
   // Close menu on escape key
   document.addEventListener('keydown', function(e) {
@@ -505,14 +649,185 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Update cart count dynamically (for AJAX cart updates)
+  // Update cart count dynamically
   document.addEventListener('cart:updated', function(e) {
     const cartCount = e.detail.count;
     const cartCountElement = document.querySelector('[data-cart-count]');
     if (cartCountElement) {
       cartCountElement.textContent = cartCount;
-      cartCountElement.classList.toggle('visually-hidden', cartCount === 0);
+      cartCountElement.classList.toggle('cart-count--hidden', cartCount === 0);
     }
   });
 });
 {% endjavascript %}
+
+{% schema %}
+{
+  "name": "Header",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo & Branding"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "default": 150,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Top Bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_bar",
+      "label": "Show top promotional bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Promotional text",
+      "default": "Free shipping on orders over $50 🚚"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contact_info",
+      "label": "Show contact information",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "contact_phone",
+      "label": "Contact phone",
+      "default": "+1 (555) 123-4567"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Contact email",
+      "default": "support@example.com"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Header Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_header",
+      "label": "Sticky header",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_header",
+      "label": "Transparent header on homepage",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "Show cart icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show social media links",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Trust Signals"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_bar",
+      "label": "Show trust signals bar",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "free_shipping",
+      "label": "Show free shipping",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "free_shipping_text",
+      "label": "Free shipping text",
+      "default": "Free Shipping Over $50"
+    },
+    {
+      "type": "checkbox",
+      "id": "money_back",
+      "label": "Show money back guarantee",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "money_back_text",
+      "label": "Money back text",
+      "default": "30-Day Returns"
+    },
+    {
+      "type": "checkbox",
+      "id": "secure_checkout",
+      "label": "Show secure checkout",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "secure_checkout_text",
+      "label": "Secure checkout text",
+      "default": "Secure Checkout"
+    },
+    {
+      "type": "checkbox",
+      "id": "customer_support",
+      "label": "Show customer support",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "customer_support_text",
+      "label": "Customer support text",
+      "default": "24/7 Support"
+    }
+  ]
+}
+{% endschema %}
