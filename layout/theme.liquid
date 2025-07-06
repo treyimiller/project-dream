@@ -20,12 +20,12 @@
       <link rel="apple-touch-icon" href="{{ settings.favicon | img_url: '180x180' }}">
     {% endif %}
     
+    {% comment %} CSS Variables - must be rendered outside of style tags {% endcomment %}
+    {% render 'css-variables' %}
+    
     {% comment %} Preload critical CSS and inline above-the-fold styles {% endcomment %}
     {% if settings.enable_critical_css %}
       <style>
-        {% comment %} Inline critical CSS for immediate rendering {% endcomment %}
-        {% render 'css-variables' %}
-        
         {% comment %} Critical above-the-fold styles {% endcomment %}
         html { 
           font-size: {{ settings.font_size_base | default: 16 }}px; 
@@ -53,8 +53,6 @@
           border-bottom: 1px solid var(--color-border);
         }
       </style>
-    {% else %}
-      {% render 'css-variables' %}
     {% endif %}
     
     {% comment %} Load non-critical CSS asynchronously {% endcomment %}

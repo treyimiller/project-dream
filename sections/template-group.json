@@ -1,6 +1,6 @@
 {
   "type": "custom.template",
-  "name": "Template",
+  "name": "Main Section",
   "sections": {
     "template-manager": {
       "type": "template-manager",
