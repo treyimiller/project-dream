@@ -1,7 +1,16 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "current": {
-    "color_scheme": "modern-minimalist",
-    "font_pairing": "modern-sans",
+    "color_scheme": "ocean-breeze",
+    "font_pairing": "classic-readable",
     "page_width": 1400,
     "page_margin": 24,
     "spacing_base": 16,
@@ -38,6 +47,7 @@
     "social_twitter": "",
     "social_snapchat": "",
     "enable_social_sharing": true,
-    "show_social_proof": true
+    "show_social_proof": true,
+    "content_for_index": []
   }
 }
