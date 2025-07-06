@@ -1,12 +1,43 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
-  "current": {}
+  "current": {
+    "color_scheme": "modern-minimalist",
+    "font_pairing": "modern-sans",
+    "page_width": 1400,
+    "page_margin": 24,
+    "spacing_base": 16,
+    "border_radius": 8,
+    "card_shadow": 2,
+    "button_style": "solid",
+    "button_size": "medium",
+    "button_border_radius": 6,
+    "button_uppercase": false,
+    "button_font_weight": 600,
+    "mobile_padding": 16,
+    "mobile_button_height": 56,
+    "mobile_sticky_header": true,
+    "mobile_hide_breadcrumbs": true,
+    "font_size_base": 16,
+    "font_size_scale": 1.25,
+    "line_height_base": 1.6,
+    "enable_lazy_loading": true,
+    "enable_critical_css": true,
+    "enable_preload_fonts": true,
+    "image_quality": "auto",
+    "show_cart_drawer": true,
+    "show_quick_add": true,
+    "show_recently_viewed": true,
+    "recently_viewed_limit": 6,
+    "show_security_badges": true,
+    "show_payment_icons": true,
+    "show_shipping_info": true,
+    "free_shipping_threshold": "50",
+    "social_instagram": "",
+    "social_tiktok": "",
+    "social_facebook": "",
+    "social_youtube": "",
+    "social_twitter": "",
+    "social_snapchat": "",
+    "enable_social_sharing": true,
+    "show_social_proof": true
+  }
 }

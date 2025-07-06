@@ -1,0 +1,712 @@
+{% comment %}
+  Product Grid Section for Project-Dream theme
+  Displays products by collection, tags, or manual selection
+  Supports "New Arrivals" and "Trending Products" functionality
+{% endcomment %}
+
+{% assign collection = collections[section.settings.collection] %}
+{% assign product_limit = section.settings.products_to_show | default: 8 %}
+
+<div class="product-grid-section section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="product-grid-container">
+    {% if section.settings.heading != blank %}
+      <div class="section-header">
+        <h2 class="section-heading">{{ section.settings.heading }}</h2>
+        {% if section.settings.subheading != blank %}
+          <p class="section-subheading">{{ section.settings.subheading }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.settings.show_filter_tabs %}
+      <div class="filter-tabs" data-filter-tabs>
+        {% if section.settings.tab_1_label != blank %}
+          <button 
+            class="filter-tab active" 
+            data-filter="tab-1"
+            data-collection="{{ section.settings.tab_1_collection }}"
+            data-tag="{{ section.settings.tab_1_tag }}"
+          >
+            {{ section.settings.tab_1_label }}
+          </button>
+        {% endif %}
+        {% if section.settings.tab_2_label != blank %}
+          <button 
+            class="filter-tab" 
+            data-filter="tab-2"
+            data-collection="{{ section.settings.tab_2_collection }}"
+            data-tag="{{ section.settings.tab_2_tag }}"
+          >
+            {{ section.settings.tab_2_label }}
+          </button>
+        {% endif %}
+        {% if section.settings.tab_3_label != blank %}
+          <button 
+            class="filter-tab" 
+            data-filter="tab-3"
+            data-collection="{{ section.settings.tab_3_collection }}"
+            data-tag="{{ section.settings.tab_3_tag }}"
+          >
+            {{ section.settings.tab_3_label }}
+          </button>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="product-grid" data-product-grid>
+      {% liquid
+        case section.settings.product_source
+          when 'collection'
+            if collection
+              assign products = collection.products
+            else
+              assign products = collections.all.products
+            endif
+          when 'tag'
+            assign products = collections.all.products | where: 'tags', section.settings.product_tag
+          when 'new_arrivals'
+            assign products = collections.all.products | sort: 'created_at' | reverse
+          when 'trending'
+            assign products = collections.all.products | sort: 'metafields.custom.trending_score' | reverse
+          when 'manual'
+            assign products = blank
+          else
+            assign products = collection.products
+        endcase
+      %}
+
+      {% if section.settings.product_source == 'manual' %}
+        {% for block in section.blocks %}
+          {% assign product = all_products[block.settings.product] %}
+          {% if product != blank %}
+            <div class="product-grid-item" data-product-id="{{ product.id }}">
+              {% render 'product-card', 
+                product: product,
+                show_quick_add: section.settings.show_quick_add,
+                show_compare: section.settings.show_compare,
+                show_variants: section.settings.show_variants,
+                aspect_ratio: section.settings.image_aspect_ratio
+              %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        {% for product in products limit: product_limit %}
+          <div class="product-grid-item" data-product-id="{{ product.id }}">
+            {% render 'product-card', 
+              product: product,
+              show_quick_add: section.settings.show_quick_add,
+              show_compare: section.settings.show_compare,
+              show_variants: section.settings.show_variants,
+              aspect_ratio: section.settings.image_aspect_ratio
+            %}
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+
+    {% if section.settings.show_view_all and collection %}
+      <div class="section-footer">
+        <a href="{{ collection.url }}" class="btn btn-secondary view-all-btn">
+          {{ section.settings.view_all_text | default: 'View All' }}
+        </a>
+      </div>
+    {% endif %}
+
+    {% if products.size == 0 %}
+      <div class="empty-state">
+        <div class="empty-state-content">
+          <h3>{{ 'products.general.no_products' | t }}</h3>
+          <p>{{ 'products.general.no_products_description' | t }}</p>
+          <a href="{{ routes.collections_url }}" class="btn btn-primary">
+            {{ 'products.general.browse_collections' | t }}
+          </a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .product-grid-section {
+    padding: var(--space-xl) var(--mobile-padding);
+  }
+
+  .product-grid-container {
+    max-width: var(--page-width);
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+  }
+
+  .section-heading {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-family-heading);
+    margin-bottom: var(--space-sm);
+    color: var(--color-foreground);
+  }
+
+  .section-subheading {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+  }
+
+  .filter-tabs {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    flex-wrap: wrap;
+  }
+
+  .filter-tab {
+    padding: var(--space-sm) var(--space-lg);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+
+  .filter-tab:hover,
+  .filter-tab.active {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-primary-text);
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+
+  .product-grid-item {
+    position: relative;
+  }
+
+  .section-footer {
+    text-align: center;
+  }
+
+  .view-all-btn {
+    min-width: 200px;
+    padding: var(--space-md) var(--space-xl);
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: var(--space-2xl) var(--space-lg);
+  }
+
+  .empty-state-content {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .empty-state h3 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--space-sm);
+    color: var(--color-foreground);
+  }
+
+  .empty-state p {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-lg);
+  }
+
+  /* Grid layout variations */
+  .product-grid[data-columns="3"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-grid[data-columns="4"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-grid[data-columns="5"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-grid[data-columns="6"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Loading state */
+  .product-grid.loading {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .product-grid.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border: 3px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Responsive design */
+  @media (min-width: 640px) {
+    .product-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .product-grid[data-columns="4"] {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .product-grid[data-columns="5"] {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .product-grid[data-columns="6"] {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .product-grid-section {
+      padding: var(--space-2xl) var(--page-margin);
+    }
+
+    .filter-tabs {
+      gap: var(--space-md);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-lg);
+    }
+
+    .product-grid[data-columns="3"] {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .product-grid[data-columns="5"] {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .product-grid[data-columns="6"] {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    .section-heading {
+      font-size: var(--font-size-3xl);
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .product-grid-section {
+      padding: var(--space-3xl) var(--page-margin);
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  class ProductGridSection extends HTMLElement {
+    constructor() {
+      super();
+      this.filterTabs = this.querySelectorAll('[data-filter-tabs] .filter-tab');
+      this.productGrid = this.querySelector('[data-product-grid]');
+      this.sectionId = this.dataset.sectionId;
+      
+      this.init();
+    }
+
+    init() {
+      this.setupFilterTabs();
+      this.setupLazyLoading();
+    }
+
+    setupFilterTabs() {
+      this.filterTabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.handleTabClick(tab);
+        });
+      });
+    }
+
+    async handleTabClick(activeTab) {
+      // Update active state
+      this.filterTabs.forEach(tab => tab.classList.remove('active'));
+      activeTab.classList.add('active');
+
+      const collection = activeTab.dataset.collection;
+      const tag = activeTab.dataset.tag;
+
+      if (collection || tag) {
+        await this.loadProducts({ collection, tag });
+      }
+    }
+
+    async loadProducts({ collection, tag }) {
+      if (!this.productGrid) return;
+
+      // Show loading state
+      this.productGrid.classList.add('loading');
+
+      try {
+        const params = new URLSearchParams();
+        if (collection) params.append('collection', collection);
+        if (tag) params.append('tag', tag);
+        params.append('section_id', this.sectionId);
+
+        const response = await fetch(`/sections/product-grid?${params}`);
+        if (!response.ok) throw new Error('Failed to load products');
+
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newGrid = doc.querySelector('[data-product-grid]');
+
+        if (newGrid) {
+          this.productGrid.innerHTML = newGrid.innerHTML;
+          this.setupProductCards();
+        }
+
+      } catch (error) {
+        console.error('Error loading products:', error);
+        // Show error message or fallback content
+      } finally {
+        this.productGrid.classList.remove('loading');
+      }
+    }
+
+    setupProductCards() {
+      // Re-initialize product cards after dynamic loading
+      const productCards = this.productGrid.querySelectorAll('.product-card');
+      productCards.forEach(card => {
+        // Dispatch event for other components to reinitialize
+        card.dispatchEvent(new CustomEvent('product-card:loaded'));
+      });
+    }
+
+    setupLazyLoading() {
+      // Implement infinite scroll or load more functionality if needed
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              // Trigger analytics or other tracking
+              this.trackSectionView();
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+
+      observer.observe(this);
+    }
+
+    trackSectionView() {
+      // Track section view for analytics
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'section_view', {
+          event_category: 'engagement',
+          event_label: 'product_grid_section'
+        });
+      }
+    }
+  }
+
+  customElements.define('product-grid-section', ProductGridSection);
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Product Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured Products"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover our latest arrivals and trending items."
+    },
+    {
+      "type": "header",
+      "content": "Product Source"
+    },
+    {
+      "type": "select",
+      "id": "product_source",
+      "label": "Product source",
+      "options": [
+        {
+          "value": "collection",
+          "label": "Collection"
+        },
+        {
+          "value": "tag",
+          "label": "Product tag"
+        },
+        {
+          "value": "new_arrivals",
+          "label": "New arrivals (by date)"
+        },
+        {
+          "value": "trending",
+          "label": "Trending (by custom score)"
+        },
+        {
+          "value": "manual",
+          "label": "Manual selection"
+        }
+      ],
+      "default": "collection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "product_tag",
+      "label": "Product tag",
+      "info": "Show products with this tag"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Filter Tabs"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filter_tabs",
+      "label": "Show filter tabs",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "tab_1_label",
+      "label": "Tab 1 label",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "collection",
+      "id": "tab_1_collection",
+      "label": "Tab 1 collection"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_tag",
+      "label": "Tab 1 tag"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_label",
+      "label": "Tab 2 label",
+      "default": "Trending"
+    },
+    {
+      "type": "collection",
+      "id": "tab_2_collection",
+      "label": "Tab 2 collection"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_tag",
+      "label": "Tab 2 tag"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_label",
+      "label": "Tab 3 label",
+      "default": "Best Sellers"
+    },
+    {
+      "type": "collection",
+      "id": "tab_3_collection",
+      "label": "Tab 3 collection"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_tag",
+      "label": "Tab 3 tag"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "grid_columns",
+      "label": "Desktop columns",
+      "options": [
+        {
+          "value": "3",
+          "label": "3 columns"
+        },
+        {
+          "value": "4",
+          "label": "4 columns"
+        },
+        {
+          "value": "5",
+          "label": "5 columns"
+        },
+        {
+          "value": "6",
+          "label": "6 columns"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "Image aspect ratio",
+      "options": [
+        {
+          "value": "square",
+          "label": "Square (1:1)"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait (4:5)"
+        },
+        {
+          "value": "landscape",
+          "label": "Landscape (16:9)"
+        },
+        {
+          "value": "vertical",
+          "label": "Vertical (9:16)"
+        }
+      ],
+      "default": "square"
+    },
+    {
+      "type": "header",
+      "content": "Product Card Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quick_add",
+      "label": "Show quick add to cart",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_compare",
+      "label": "Show compare button",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_variants",
+      "label": "Show variant options",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "View All Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show view all button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View all text",
+      "default": "View All"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Grid",
+      "settings": {
+        "heading": "Featured Products",
+        "product_source": "collection",
+        "products_to_show": 8,
+        "show_quick_add": true,
+        "show_view_all": true
+      }
+    },
+    {
+      "name": "New Arrivals",
+      "settings": {
+        "heading": "New Arrivals",
+        "product_source": "new_arrivals",
+        "products_to_show": 8,
+        "show_quick_add": true,
+        "show_view_all": true
+      }
+    },
+    {
+      "name": "Trending Products",
+      "settings": {
+        "heading": "Trending Now",
+        "product_source": "trending",
+        "products_to_show": 8,
+        "show_quick_add": true,
+        "show_view_all": true
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,50 +1,795 @@
 {% comment %}
-  This section is used in the product template to render product page with
-  media, content, and add-to-cart form.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
+  Enhanced product section with conversion features for Project-Dream theme
+  Includes urgency timer, stock counter, sticky cart, and mobile-first design
 {% endcomment %}
 
-<div class="product-images">
-  {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
-  {% endfor %}
-</div>
+{% assign current_variant = product.selected_or_first_available_variant %}
 
-<div class="product-info">
-  <h1>{{ product.title }}</h1>
-  <p>{{ product.price | money }}</p>
-  <p>{{ product.description }}</p>
-</div>
+<div class="product-section" data-product-id="{{ product.id }}">
+  <div class="product-media">
+    {% if product.media.size > 0 %}
+      <div class="product-gallery" data-gallery>
+        {% for media in product.media %}
+          <div class="product-media-item {% if forloop.first %}active{% endif %}" data-media-id="{{ media.id }}">
+            {% case media.media_type %}
+              {% when 'image' %}
+                {% render 'image', 
+                  image: media,
+                  class: 'product-image',
+                  loading: 'eager',
+                  sizes: '(max-width: 768px) 100vw, 50vw'
+                %}
+              {% when 'video' %}
+                <video 
+                  controls 
+                  playsinline 
+                  class="product-video"
+                  poster="{{ media.preview_image | img_url: '800x800' }}"
+                >
+                  <source src="{{ media.sources[1].url }}" type="{{ media.sources[1].mime_type }}">
+                  <source src="{{ media.sources[0].url }}" type="{{ media.sources[0].mime_type }}">
+                </video>
+              {% when 'external_video' %}
+                <div class="product-external-video">
+                  {{ media | external_video_tag }}
+                </div>
+              {% when 'model' %}
+                <div class="product-model">
+                  {{ media | model_viewer_tag }}
+                </div>
+            {% endcase %}
+          </div>
+        {% endfor %}
+      </div>
+      
+      {% if product.media.size > 1 %}
+        <div class="product-thumbnails">
+          {% for media in product.media %}
+            <button 
+              class="product-thumbnail {% if forloop.first %}active{% endif %}"
+              data-media-id="{{ media.id }}"
+              aria-label="View {{ media.alt | escape }}"
+            >
+              {% render 'image', 
+                image: media.preview_image,
+                class: 'thumbnail-image',
+                loading: 'lazy',
+                sizes: '80px'
+              %}
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="product-no-media">
+        {{ 'product.no_media' | t }}
+      </div>
+    {% endif %}
+  </div>
 
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
+  <div class="product-info">
+    <div class="product-header">
+      <h1 class="product-title">{{ product.title }}</h1>
+      
+      {% if section.settings.show_vendor and product.vendor != blank %}
+        <div class="product-vendor">
+          <span class="vendor-label">{{ 'product.vendor' | t }}</span>
+          <span class="vendor-name">{{ product.vendor }}</span>
+        </div>
+      {% endif %}
+      
+      <div class="product-price" data-price-display>
+        {% if current_variant.compare_at_price > current_variant.price %}
+          <span class="price-compare">{{ current_variant.compare_at_price | money }}</span>
+          <span class="price-current sale">{{ current_variant.price | money }}</span>
+          <span class="price-savings">
+            {{ 'product.save_amount' | t: amount: current_variant.compare_at_price | minus: current_variant.price | money }}
+          </span>
+        {% else %}
+          <span class="price-current">{{ current_variant.price | money }}</span>
+        {% endif %}
+      </div>
 
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
-          {% endif %}
+      {% if section.settings.show_stock_counter %}
+        {% render 'stock-counter', variant: current_variant, threshold: section.settings.stock_threshold %}
+      {% endif %}
+
+      {% if section.settings.show_urgency_timer and section.settings.urgency_end_date != blank %}
+        {% render 'urgency-timer', end_date: section.settings.urgency_end_date %}
+      {% endif %}
+    </div>
+
+    {% if product.description != blank %}
+      <div class="product-description">
+        {{ product.description }}
+      </div>
+    {% endif %}
+
+    {% form 'product', product, id: 'product-form', class: 'product-form' %}
+      {% if product.variants.size > 1 %}
+        <div class="product-variants">
+          {% for option in product.options_with_values %}
+            <div class="variant-option" data-option-name="{{ option.name | handleize }}">
+              <label class="variant-label">{{ option.name }}</label>
+              <div class="variant-values">
+                {% for value in option.values %}
+                  <input 
+                    type="radio" 
+                    name="options[{{ option.name | escape }}]" 
+                    value="{{ value | escape }}"
+                    id="option-{{ option.name | handleize }}-{{ value | handleize }}"
+                    {% if option.selected_value == value %}checked{% endif %}
+                  >
+                  <label 
+                    for="option-{{ option.name | handleize }}-{{ value | handleize }}"
+                    class="variant-value"
+                  >
+                    {{ value }}
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="product-actions">
+        <div class="quantity-selector">
+          <label for="quantity">{{ 'product.quantity' | t }}</label>
+          <div class="quantity-controls">
+            <button type="button" class="quantity-btn quantity-decrease" aria-label="Decrease quantity">-</button>
+            <input 
+              type="number" 
+              id="quantity" 
+              name="quantity" 
+              value="1" 
+              min="1"
+              class="quantity-input"
+            >
+            <button type="button" class="quantity-btn quantity-increase" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn btn-primary btn-add-to-cart"
+          data-add-to-cart
+          {% unless current_variant.available %}disabled{% endunless %}
         >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
-      {% endfor %}
-    </select>
+          {% if current_variant.available %}
+            {{ 'product.add_to_cart' | t }}
+          {% else %}
+            {{ 'product.sold_out' | t }}
+          {% endif %}
+        </button>
 
-    <input type="text" name="quantity" min="1" value="1">
+        {% if section.settings.show_dynamic_checkout %}
+          {{ form | payment_button }}
+        {% endif %}
+      </div>
 
-    <input type="submit" value="Add to cart">
-    {{ form | payment_button }}
-  {% endform %}
+      <select name="id" class="sr-only" data-variant-select>
+        {% for variant in product.variants %}
+          <option 
+            value="{{ variant.id }}"
+            {% if variant == current_variant %}selected{% endif %}
+            data-available="{{ variant.available }}"
+            data-price="{{ variant.price }}"
+            data-compare-price="{{ variant.compare_at_price }}"
+            data-inventory="{{ variant.inventory_quantity }}"
+          >
+            {{ variant.title }}
+          </option>
+        {% endfor %}
+      </select>
+    {% endform %}
+
+    {% if section.settings.show_trust_badges %}
+      <div class="product-trust-badges">
+        {% render 'trust-badges', style: 'compact' %}
+      </div>
+    {% endif %}
+
+    {% if product.metafields.custom.features != blank %}
+      <div class="product-features">
+        <h3>{{ 'product.features' | t }}</h3>
+        <div class="features-list">
+          {% for feature in product.metafields.custom.features.value %}
+            <div class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span class="feature-text">{{ feature }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
 </div>
+
+{% if section.settings.enable_sticky_cart %}
+  <sticky-add-to-cart>
+    {% render 'sticky-add-to-cart', product: product %}
+  </sticky-add-to-cart>
+{% endif %}
+
+{% stylesheet %}
+  .product-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-md);
+    max-width: var(--page-width);
+    margin: 0 auto;
+  }
+
+  .product-media {
+    position: relative;
+  }
+
+  .product-gallery {
+    position: relative;
+    margin-bottom: var(--space-md);
+  }
+
+  .product-media-item {
+    display: none;
+    width: 100%;
+    aspect-ratio: var(--product-aspect-ratio, 1);
+    overflow: hidden;
+    border-radius: var(--border-radius);
+  }
+
+  .product-media-item.active {
+    display: block;
+  }
+
+  .product-image,
+  .product-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-thumbnails {
+    display: flex;
+    gap: var(--space-xs);
+    overflow-x: auto;
+    padding: var(--space-xs) 0;
+  }
+
+  .product-thumbnail {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .product-thumbnail.active {
+    border-color: var(--color-primary);
+  }
+
+  .thumbnail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-header {
+    margin-bottom: var(--space-lg);
+  }
+
+  .product-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-sm);
+    line-height: 1.2;
+  }
+
+  .product-vendor {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .product-price {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+  }
+
+  .price-current {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+  }
+
+  .price-current.sale {
+    color: var(--color-error);
+  }
+
+  .price-compare {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    text-decoration: line-through;
+  }
+
+  .price-savings {
+    font-size: var(--font-size-sm);
+    color: var(--color-success);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .product-description {
+    margin-bottom: var(--space-lg);
+    line-height: 1.6;
+  }
+
+  .product-variants {
+    margin-bottom: var(--space-lg);
+  }
+
+  .variant-option {
+    margin-bottom: var(--space-md);
+  }
+
+  .variant-label {
+    display: block;
+    margin-bottom: var(--space-xs);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .variant-values {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+  }
+
+  .variant-values input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .variant-value {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 44px;
+    text-align: center;
+  }
+
+  .variant-value:hover,
+  .variant-values input[type="radio"]:checked + .variant-value {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-primary-text);
+  }
+
+  .product-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .quantity-selector {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .quantity-controls {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    width: fit-content;
+  }
+
+  .quantity-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: var(--font-size-lg);
+    transition: background-color 0.2s ease;
+  }
+
+  .quantity-btn:hover {
+    background-color: var(--color-background-secondary);
+  }
+
+  .quantity-input {
+    width: 60px;
+    height: 44px;
+    text-align: center;
+    border: none;
+    font-size: var(--font-size-base);
+  }
+
+  .btn-add-to-cart {
+    width: 100%;
+    min-height: 56px;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .product-trust-badges {
+    padding: var(--space-md) 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-lg);
+  }
+
+  .product-features {
+    margin-top: var(--space-lg);
+  }
+
+  .product-features h3 {
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .features-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .feature-icon {
+    color: var(--color-success);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (min-width: 768px) {
+    .product-section {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+      padding: var(--space-lg);
+    }
+
+    .product-actions {
+      flex-direction: row;
+      align-items: flex-end;
+    }
+
+    .quantity-selector {
+      flex: 0 0 auto;
+    }
+
+    .btn-add-to-cart {
+      flex: 1;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-section {
+      gap: var(--space-2xl);
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  class ProductSection extends HTMLElement {
+    constructor() {
+      super();
+      this.form = this.querySelector('#product-form');
+      this.variantSelect = this.querySelector('[data-variant-select]');
+      this.priceDisplay = this.querySelector('[data-price-display]');
+      this.addToCartBtn = this.querySelector('[data-add-to-cart]');
+      this.quantityInput = this.querySelector('.quantity-input');
+      this.gallery = this.querySelector('[data-gallery]');
+      
+      this.init();
+    }
+
+    init() {
+      this.setupVariantSelectors();
+      this.setupQuantityControls();
+      this.setupGallery();
+      this.setupFormSubmission();
+    }
+
+    setupVariantSelectors() {
+      const variantInputs = this.querySelectorAll('.variant-values input[type="radio"]');
+      variantInputs.forEach(input => {
+        input.addEventListener('change', () => {
+          this.updateSelectedVariant();
+        });
+      });
+    }
+
+    setupQuantityControls() {
+      const decreaseBtn = this.querySelector('.quantity-decrease');
+      const increaseBtn = this.querySelector('.quantity-increase');
+      
+      decreaseBtn?.addEventListener('click', () => {
+        const currentValue = parseInt(this.quantityInput.value);
+        if (currentValue > 1) {
+          this.quantityInput.value = currentValue - 1;
+        }
+      });
+
+      increaseBtn?.addEventListener('click', () => {
+        const currentValue = parseInt(this.quantityInput.value);
+        this.quantityInput.value = currentValue + 1;
+      });
+    }
+
+    setupGallery() {
+      const thumbnails = this.querySelectorAll('.product-thumbnail');
+      thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', () => {
+          const mediaId = thumbnail.dataset.mediaId;
+          this.switchToMedia(mediaId);
+        });
+      });
+    }
+
+    setupFormSubmission() {
+      this.form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.addToCart();
+      });
+    }
+
+    updateSelectedVariant() {
+      const options = {};
+      this.querySelectorAll('.variant-values input[type="radio"]:checked').forEach(input => {
+        const optionName = input.name.replace('options[', '').replace(']', '');
+        options[optionName] = input.value;
+      });
+
+      const variant = this.findVariantByOptions(options);
+      if (variant) {
+        this.variantSelect.value = variant.id;
+        this.updatePrice(variant);
+        this.updateAddToCartButton(variant);
+        this.updateStockCounter(variant);
+      }
+    }
+
+    findVariantByOptions(options) {
+      const variants = JSON.parse(this.querySelector('[data-product-variants]')?.textContent || '[]');
+      return variants.find(variant => {
+        return Object.keys(options).every(key => variant.options.includes(options[key]));
+      });
+    }
+
+    updatePrice(variant) {
+      if (!this.priceDisplay) return;
+
+      const currentPrice = this.priceDisplay.querySelector('.price-current');
+      const comparePrice = this.priceDisplay.querySelector('.price-compare');
+      const savings = this.priceDisplay.querySelector('.price-savings');
+
+      if (currentPrice) {
+        currentPrice.textContent = Shopify.formatMoney(variant.price);
+        currentPrice.classList.toggle('sale', variant.compare_at_price > variant.price);
+      }
+
+      if (comparePrice) {
+        if (variant.compare_at_price > variant.price) {
+          comparePrice.textContent = Shopify.formatMoney(variant.compare_at_price);
+          comparePrice.style.display = 'inline';
+        } else {
+          comparePrice.style.display = 'none';
+        }
+      }
+
+      if (savings) {
+        if (variant.compare_at_price > variant.price) {
+          const saveAmount = variant.compare_at_price - variant.price;
+          savings.textContent = `Save ${Shopify.formatMoney(saveAmount)}`;
+          savings.style.display = 'inline';
+        } else {
+          savings.style.display = 'none';
+        }
+      }
+    }
+
+    updateAddToCartButton(variant) {
+      if (!this.addToCartBtn) return;
+
+      if (variant.available) {
+        this.addToCartBtn.disabled = false;
+        this.addToCartBtn.textContent = 'Add to Cart';
+      } else {
+        this.addToCartBtn.disabled = true;
+        this.addToCartBtn.textContent = 'Sold Out';
+      }
+    }
+
+    updateStockCounter(variant) {
+      const stockCounter = this.querySelector('.stock-counter');
+      if (stockCounter && variant.inventory_quantity !== undefined) {
+        stockCounter.dispatchEvent(new CustomEvent('update-stock', {
+          detail: { quantity: variant.inventory_quantity }
+        }));
+      }
+    }
+
+    switchToMedia(mediaId) {
+      const mediaItems = this.querySelectorAll('.product-media-item');
+      const thumbnails = this.querySelectorAll('.product-thumbnail');
+      
+      mediaItems.forEach(item => {
+        item.classList.toggle('active', item.dataset.mediaId === mediaId);
+      });
+      
+      thumbnails.forEach(thumbnail => {
+        thumbnail.classList.toggle('active', thumbnail.dataset.mediaId === mediaId);
+      });
+    }
+
+    async addToCart() {
+      const formData = new FormData(this.form);
+      
+      try {
+        const response = await fetch('/cart/add.js', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          const item = await response.json();
+          document.dispatchEvent(new CustomEvent('cart:added', {
+            detail: { item }
+          }));
+        } else {
+          throw new Error('Failed to add to cart');
+        }
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        // Show error message to user
+      }
+    }
+  }
+
+  customElements.define('product-section', ProductSection);
+{% endjavascript %}
 
 {% schema %}
 {
-  "name": "t:general.product",
-  "settings": [],
+  "name": "Product",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product Display"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show dynamic checkout button",
+      "info": "Each customer will see their preferred payment method from those available on your store, such as PayPal or Apple Pay.",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "gallery_aspect_ratio",
+      "label": "Gallery aspect ratio",
+      "options": [
+        {
+          "value": "1",
+          "label": "Square (1:1)"
+        },
+        {
+          "value": "0.75",
+          "label": "Portrait (4:3)"
+        },
+        {
+          "value": "0.5625",
+          "label": "Vertical (9:16)"
+        },
+        {
+          "value": "1.77",
+          "label": "Landscape (16:9)"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "header",
+      "content": "Conversion Tools"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_urgency_timer",
+      "label": "Enable urgency timer",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "urgency_end_date",
+      "label": "Urgency timer end date",
+      "info": "Format: YYYY-MM-DD HH:MM (e.g., 2024-12-31 23:59)",
+      "condition": "show_urgency_timer"
+    },
+    {
+      "type": "text",
+      "id": "urgency_message",
+      "label": "Urgency timer message",
+      "default": "Limited time offer ends in:",
+      "condition": "show_urgency_timer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stock_counter",
+      "label": "Enable stock counter",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "stock_threshold",
+      "label": "Stock counter threshold",
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "default": 10,
+      "info": "Show stock counter when inventory is below this number",
+      "condition": "show_stock_counter"
+    },
+    {
+      "type": "text",
+      "id": "stock_message",
+      "label": "Stock counter message",
+      "default": "Hurry! Only {count} left in stock",
+      "info": "Use {count} to display the stock number",
+      "condition": "show_stock_counter"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_cart",
+      "label": "Enable sticky add-to-cart (mobile)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_badges",
+      "label": "Show trust badges",
+      "default": true
+    }
+  ],
   "disabled_on": {
     "groups": ["header", "footer"]
   }

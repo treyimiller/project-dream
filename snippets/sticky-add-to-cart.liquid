@@ -1,5 +1,6 @@
-{%- comment -%}
-  Renders a sticky add-to-cart bar for mobile product pages
+{% comment %}
+  Enhanced Sticky Add-to-Cart for Project-Dream theme
+  Shows when product form scrolls out of view on mobile
   
   Accepts:
   - product: product object (required)
@@ -7,67 +8,593 @@
   
   Usage:
   {% render 'sticky-add-to-cart', product: product %}
-{%- endcomment -%}
+{% endcomment %}
 
-{%- if product -%}
-  <div class="sticky-add-to-cart{% unless show_on_scroll == false %} sticky-add-to-cart--on-scroll{% endunless %}" data-sticky-cart data-product-id="{{ product.id }}">
+{% if product %}
+  <div 
+    class="sticky-add-to-cart{% unless show_on_scroll == false %} sticky-add-to-cart--on-scroll{% endunless %}" 
+    data-sticky-cart 
+    data-product-id="{{ product.id }}"
+    style="transform: translateY(100%); opacity: 0;"
+  >
     <div class="sticky-add-to-cart__content">
       <div class="sticky-add-to-cart__product-info">
-        {%- if product.featured_image -%}
-          <img
-            src="{{ product.featured_image | img_url: '80x80' }}"
-            alt="{{ product.featured_image.alt | escape }}"
-            width="40"
-            height="40"
-            loading="lazy"
-            class="sticky-add-to-cart__image"
-          >
-        {%- endif -%}
+        {% if product.featured_image %}
+          {% render 'image',
+            image: product.featured_image,
+            class: 'sticky-add-to-cart__image',
+            loading: 'lazy',
+            sizes: '60px'
+          %}
+        {% endif %}
         
         <div class="sticky-add-to-cart__details">
           <h3 class="sticky-add-to-cart__title">{{ product.title | escape }}</h3>
           <div class="sticky-add-to-cart__price" data-sticky-price>
-            {%- if product.compare_at_price > product.price -%}
-              <span class="sticky-add-to-cart__price--sale">{{ product.selected_or_first_available_variant.price | money }}</span>
-              <span class="sticky-add-to-cart__price--compare">{{ product.selected_or_first_available_variant.compare_at_price | money }}</span>
-            {%- else -%}
-              <span>{{ product.selected_or_first_available_variant.price | money }}</span>
-            {%- endif -%}
+            {% assign current_variant = product.selected_or_first_available_variant %}
+            {% if current_variant.compare_at_price > current_variant.price %}
+              <span class="sticky-price--sale">{{ current_variant.price | money }}</span>
+              <span class="sticky-price--compare">{{ current_variant.compare_at_price | money }}</span>
+            {% else %}
+              <span class="sticky-price--current">{{ current_variant.price | money }}</span>
+            {% endif %}
           </div>
         </div>
       </div>
       
       <div class="sticky-add-to-cart__actions">
-        {%- if product.has_only_default_variant -%}
+        {% if product.has_only_default_variant %}
           <button 
             type="button"
-            class="sticky-add-to-cart__button button button--primary"
-            data-add-to-cart
-            data-variant-id="{{ product.selected_or_first_available_variant.id }}"
-            {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+            class="sticky-add-to-cart__button btn btn-primary"
+            data-sticky-add-to-cart
+            data-variant-id="{{ current_variant.id }}"
+            {% unless current_variant.available %}disabled{% endunless %}
           >
-            {%- if product.selected_or_first_available_variant.available -%}
-              Add to Cart
-            {%- else -%}
-              Sold Out
-            {%- endif -%}
+            {% if current_variant.available %}
+              {{ 'product.add_to_cart' | t }}
+            {% else %}
+              {{ 'product.sold_out' | t }}
+            {% endif %}
           </button>
-        {%- else -%}
+        {% else %}
           <button 
             type="button"
-            class="sticky-add-to-cart__button button button--secondary"
+            class="sticky-add-to-cart__button btn btn-secondary"
             data-scroll-to-form
           >
-            Select Options
+            {{ 'product.select_options' | t | default: 'Select Options' }}
           </button>
-        {%- endif -%}
+        {% endif %}
       </div>
     </div>
     
-    {%- if product.selected_or_first_available_variant.inventory_management == 'shopify' and product.selected_or_first_available_variant.inventory_quantity <= 10 and product.selected_or_first_available_variant.inventory_quantity > 0 -%}
+    {% if current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity <= 10 and current_variant.inventory_quantity > 0 %}
       <div class="sticky-add-to-cart__urgency">
-        {% render 'stock-counter', product: product, variant: product.selected_or_first_available_variant, threshold: 10 %}
+        <div class="stock-indicator">
+          <span class="stock-icon">⚡</span>
+          <span class="stock-text">{{ 'product.low_stock' | t: count: current_variant.inventory_quantity | default: 'Only ' | append: current_variant.inventory_quantity | append: ' left!' }}</span>
+        </div>
       </div>
-    {%- endif -%}
+    {% endif %}
   </div>
-{%- endif -%}
+{% endif %}
+
+{% stylesheet %}
+  .sticky-add-to-cart {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-background);
+    border-top: 1px solid var(--color-border);
+    z-index: var(--z-index-sticky);
+    transition: transform var(--transition-base), opacity var(--transition-base);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 100vw;
+  }
+
+  .sticky-add-to-cart--on-scroll {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  .sticky-add-to-cart--visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .sticky-add-to-cart__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--mobile-padding);
+    min-height: var(--mobile-button-height);
+    gap: var(--space-sm);
+  }
+
+  .sticky-add-to-cart__product-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sticky-add-to-cart__image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: var(--border-radius-sm);
+    flex-shrink: 0;
+    border: 1px solid var(--color-border);
+  }
+
+  .sticky-add-to-cart__details {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .sticky-add-to-cart__title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-foreground);
+    margin: 0;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sticky-add-to-cart__price {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-top: 2px;
+  }
+
+  .sticky-price--current {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+  }
+
+  .sticky-price--sale {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-error);
+  }
+
+  .sticky-price--compare {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    text-decoration: line-through;
+  }
+
+  .sticky-add-to-cart__actions {
+    flex-shrink: 0;
+  }
+
+  .sticky-add-to-cart__button {
+    min-width: 120px;
+    min-height: 44px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--button-border-radius);
+    padding: var(--space-sm) var(--space-md);
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+  }
+
+  .sticky-add-to-cart__button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .sticky-add-to-cart__urgency {
+    background-color: var(--color-warning);
+    color: white;
+    padding: var(--space-xs) var(--mobile-padding);
+    font-size: var(--font-size-xs);
+    text-align: center;
+    animation: pulse 2s infinite;
+  }
+
+  .stock-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+  }
+
+  .stock-icon {
+    font-size: var(--font-size-sm);
+  }
+
+  .stock-text {
+    font-weight: var(--font-weight-medium);
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  /* Loading state */
+  .sticky-add-to-cart__button.loading {
+    position: relative;
+    color: transparent;
+  }
+
+  .sticky-add-to-cart__button.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Hide on desktop by default */
+  @media (min-width: 768px) {
+    .sticky-add-to-cart {
+      display: none;
+    }
+  }
+
+  /* Show on desktop if specifically enabled */
+  .sticky-add-to-cart--show-desktop {
+    display: block;
+  }
+
+  @media (min-width: 768px) {
+    .sticky-add-to-cart--show-desktop .sticky-add-to-cart__content {
+      max-width: var(--page-width);
+      margin: 0 auto;
+      padding-left: var(--page-margin);
+      padding-right: var(--page-margin);
+    }
+  }
+
+  /* Safe area support for devices with notches */
+  @supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .sticky-add-to-cart {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+
+  /* High contrast mode */
+  @media (prefers-contrast: high) {
+    .sticky-add-to-cart {
+      border-top-width: 2px;
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .sticky-add-to-cart {
+      transition: none;
+    }
+    
+    .sticky-add-to-cart__urgency {
+      animation: none;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  class StickyAddToCart extends HTMLElement {
+    constructor() {
+      super();
+      this.productForm = document.querySelector('#product-form');
+      this.addToCartButton = this.querySelector('[data-sticky-add-to-cart]');
+      this.scrollToFormButton = this.querySelector('[data-scroll-to-form]');
+      this.priceDisplay = this.querySelector('[data-sticky-price]');
+      this.productId = this.dataset.productId;
+      this.isVisible = false;
+      this.observer = null;
+      
+      this.init();
+    }
+
+    init() {
+      this.setupScrollObserver();
+      this.setupButtons();
+      this.setupVariantListener();
+      this.setupCartListener();
+    }
+
+    setupScrollObserver() {
+      if (!this.productForm) return;
+
+      // Create intersection observer to track when product form is out of view
+      this.observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              this.hide();
+            } else {
+              this.show();
+            }
+          });
+        },
+        {
+          threshold: 0,
+          rootMargin: '-100px 0px 0px 0px'
+        }
+      );
+
+      this.observer.observe(this.productForm);
+    }
+
+    setupButtons() {
+      // Add to cart button
+      if (this.addToCartButton) {
+        this.addToCartButton.addEventListener('click', () => {
+          this.handleAddToCart();
+        });
+      }
+
+      // Scroll to form button
+      if (this.scrollToFormButton) {
+        this.scrollToFormButton.addEventListener('click', () => {
+          this.scrollToProductForm();
+        });
+      }
+    }
+
+    setupVariantListener() {
+      // Listen for variant changes from the main product form
+      document.addEventListener('variant:change', (e) => {
+        if (e.detail.productId === this.productId) {
+          this.updateVariant(e.detail.variant);
+        }
+      });
+    }
+
+    setupCartListener() {
+      // Listen for cart additions to provide feedback
+      document.addEventListener('cart:added', (e) => {
+        this.showAddedFeedback();
+      });
+    }
+
+    show() {
+      if (this.isVisible) return;
+      
+      this.isVisible = true;
+      this.classList.add('sticky-add-to-cart--visible');
+      
+      // Trigger analytics
+      this.trackVisibility('show');
+    }
+
+    hide() {
+      if (!this.isVisible) return;
+      
+      this.isVisible = false;
+      this.classList.remove('sticky-add-to-cart--visible');
+      
+      // Trigger analytics
+      this.trackVisibility('hide');
+    }
+
+    async handleAddToCart() {
+      if (!this.addToCartButton || this.addToCartButton.disabled) return;
+
+      const variantId = this.addToCartButton.dataset.variantId;
+      const quantity = 1;
+
+      // Show loading state
+      this.setButtonLoading(true);
+
+      try {
+        const response = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: variantId,
+            quantity: quantity
+          })
+        });
+
+        if (response.ok) {
+          const item = await response.json();
+          
+          // Dispatch cart added event
+          document.dispatchEvent(new CustomEvent('cart:added', {
+            detail: { item, source: 'sticky-cart' }
+          }));
+
+          // Track conversion
+          this.trackAddToCart(item);
+          
+        } else {
+          throw new Error('Failed to add to cart');
+        }
+      } catch (error) {
+        console.error('Sticky cart error:', error);
+        this.showError('Unable to add to cart. Please try again.');
+      } finally {
+        this.setButtonLoading(false);
+      }
+    }
+
+    scrollToProductForm() {
+      if (!this.productForm) return;
+
+      this.productForm.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+
+      // Track interaction
+      this.trackInteraction('scroll_to_form');
+    }
+
+    updateVariant(variant) {
+      if (!variant) return;
+
+      // Update button state
+      if (this.addToCartButton) {
+        this.addToCartButton.dataset.variantId = variant.id;
+        this.addToCartButton.disabled = !variant.available;
+        this.addToCartButton.textContent = variant.available ? 'Add to Cart' : 'Sold Out';
+      }
+
+      // Update price display
+      this.updatePriceDisplay(variant);
+
+      // Update urgency display
+      this.updateUrgencyDisplay(variant);
+    }
+
+    updatePriceDisplay(variant) {
+      if (!this.priceDisplay) return;
+
+      let priceHTML = '';
+      
+      if (variant.compare_at_price > variant.price) {
+        priceHTML = `
+          <span class="sticky-price--sale">${Shopify.formatMoney(variant.price)}</span>
+          <span class="sticky-price--compare">${Shopify.formatMoney(variant.compare_at_price)}</span>
+        `;
+      } else {
+        priceHTML = `<span class="sticky-price--current">${Shopify.formatMoney(variant.price)}</span>`;
+      }
+
+      this.priceDisplay.innerHTML = priceHTML;
+    }
+
+    updateUrgencyDisplay(variant) {
+      const urgencyElement = this.querySelector('.sticky-add-to-cart__urgency');
+      
+      if (variant.inventory_management === 'shopify' && 
+          variant.inventory_quantity <= 10 && 
+          variant.inventory_quantity > 0) {
+        
+        if (!urgencyElement) {
+          // Create urgency element if it doesn't exist
+          const urgencyHTML = `
+            <div class="sticky-add-to-cart__urgency">
+              <div class="stock-indicator">
+                <span class="stock-icon">⚡</span>
+                <span class="stock-text">Only ${variant.inventory_quantity} left!</span>
+              </div>
+            </div>
+          `;
+          this.insertAdjacentHTML('beforeend', urgencyHTML);
+        } else {
+          // Update existing urgency element
+          const stockText = urgencyElement.querySelector('.stock-text');
+          if (stockText) {
+            stockText.textContent = `Only ${variant.inventory_quantity} left!`;
+          }
+        }
+      } else if (urgencyElement) {
+        // Remove urgency element if not needed
+        urgencyElement.remove();
+      }
+    }
+
+    setButtonLoading(loading) {
+      if (!this.addToCartButton) return;
+
+      if (loading) {
+        this.addToCartButton.classList.add('loading');
+        this.addToCartButton.disabled = true;
+      } else {
+        this.addToCartButton.classList.remove('loading');
+        // Re-enable based on variant availability
+        const variantId = this.addToCartButton.dataset.variantId;
+        // This would need to check current variant availability
+        this.addToCartButton.disabled = false;
+      }
+    }
+
+    showAddedFeedback() {
+      if (!this.addToCartButton) return;
+
+      const originalText = this.addToCartButton.textContent;
+      this.addToCartButton.textContent = 'Added!';
+      this.addToCartButton.classList.add('success');
+
+      setTimeout(() => {
+        this.addToCartButton.textContent = originalText;
+        this.addToCartButton.classList.remove('success');
+      }, 2000);
+    }
+
+    showError(message) {
+      // Simple error display - could be enhanced with toast notifications
+      console.error('Sticky cart error:', message);
+      
+      // Could integrate with theme's notification system here
+      if (typeof window.showNotification === 'function') {
+        window.showNotification(message, 'error');
+      }
+    }
+
+    trackVisibility(action) {
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'sticky_cart_' + action, {
+          event_category: 'engagement',
+          event_label: 'sticky_add_to_cart'
+        });
+      }
+    }
+
+    trackInteraction(action) {
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'sticky_cart_interaction', {
+          event_category: 'engagement',
+          event_label: action
+        });
+      }
+    }
+
+    trackAddToCart(item) {
+      // Track conversion event
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'add_to_cart', {
+          currency: 'USD',
+          value: item.price / 100,
+          event_category: 'ecommerce',
+          event_label: 'sticky_cart',
+          items: [{
+            item_id: item.variant_id,
+            item_name: item.product_title,
+            item_variant: item.variant_title,
+            quantity: item.quantity,
+            price: item.price / 100
+          }]
+        });
+      }
+    }
+
+    disconnect() {
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+    }
+  }
+
+  customElements.define('sticky-add-to-cart', StickyAddToCart);
+{% endjavascript %}

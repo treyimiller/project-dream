@@ -1,0 +1,912 @@
+{% comment %}
+  Brand Story Section for Project-Dream theme
+  Rich content section for comprehensive brand storytelling
+{% endcomment %}
+
+<div class="brand-story-section section-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="brand-story-container">
+    {% if section.settings.heading != blank %}
+      <div class="section-header">
+        <h2 class="section-heading">{{ section.settings.heading }}</h2>
+        {% if section.settings.subheading != blank %}
+          <p class="section-subheading">{{ section.settings.subheading }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="brand-story-content">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'text' %}
+            <div class="content-block text-block" {{ block.shopify_attributes }}>
+              {% if block.settings.text != blank %}
+                <div class="rich-text">
+                  {{ block.settings.text }}
+                </div>
+              {% endif %}
+            </div>
+
+          {% when 'image' %}
+            <div class="content-block image-block" {{ block.shopify_attributes }}>
+              {% if block.settings.image %}
+                <div class="image-container">
+                  {% render 'image', 
+                    image: block.settings.image,
+                    class: 'brand-image',
+                    loading: 'lazy',
+                    sizes: '(max-width: 768px) 100vw, 50vw'
+                  %}
+                  {% if block.settings.image_caption != blank %}
+                    <p class="image-caption">{{ block.settings.image_caption }}</p>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+
+          {% when 'video' %}
+            <div class="content-block video-block" {{ block.shopify_attributes }}>
+              {% if block.settings.video_url != blank %}
+                <div class="video-container">
+                  {% if block.settings.video_url contains 'youtube' %}
+                    {% assign video_id = block.settings.video_url | split: 'v=' | last | split: '&' | first %}
+                    <iframe 
+                      src="https://www.youtube.com/embed/{{ video_id }}"
+                      frameborder="0"
+                      allowfullscreen
+                      class="video-iframe"
+                      loading="lazy"
+                    ></iframe>
+                  {% elsif block.settings.video_url contains 'vimeo' %}
+                    {% assign video_id = block.settings.video_url | split: '/' | last %}
+                    <iframe 
+                      src="https://player.vimeo.com/video/{{ video_id }}"
+                      frameborder="0"
+                      allowfullscreen
+                      class="video-iframe"
+                      loading="lazy"
+                    ></iframe>
+                  {% else %}
+                    <video 
+                      controls 
+                      playsinline 
+                      class="brand-video"
+                      {% if block.settings.video_poster %}poster="{{ block.settings.video_poster | img_url: '800x600' }}"{% endif %}
+                    >
+                      <source src="{{ block.settings.video_url }}" type="video/mp4">
+                      Your browser does not support the video tag.
+                    </video>
+                  {% endif %}
+                  {% if block.settings.video_caption != blank %}
+                    <p class="video-caption">{{ block.settings.video_caption }}</p>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+
+          {% when 'quote' %}
+            <div class="content-block quote-block" {{ block.shopify_attributes }}>
+              {% if block.settings.quote_text != blank %}
+                <blockquote class="brand-quote">
+                  <div class="quote-content">
+                    <span class="quote-mark">"</span>
+                    <p class="quote-text">{{ block.settings.quote_text }}</p>
+                  </div>
+                  {% if block.settings.quote_author != blank %}
+                    <cite class="quote-author">
+                      {{ block.settings.quote_author }}
+                      {% if block.settings.quote_title != blank %}
+                        <span class="quote-title">{{ block.settings.quote_title }}</span>
+                      {% endif %}
+                    </cite>
+                  {% endif %}
+                </blockquote>
+              {% endif %}
+            </div>
+
+          {% when 'timeline' %}
+            <div class="content-block timeline-block" {{ block.shopify_attributes }}>
+              {% if block.settings.timeline_heading != blank %}
+                <h3 class="timeline-heading">{{ block.settings.timeline_heading }}</h3>
+              {% endif %}
+              <div class="timeline">
+                {% for i in (1..5) %}
+                  {% assign year_key = 'timeline_year_' | append: i %}
+                  {% assign event_key = 'timeline_event_' | append: i %}
+                  {% assign year = block.settings[year_key] %}
+                  {% assign event = block.settings[event_key] %}
+                  {% if year != blank and event != blank %}
+                    <div class="timeline-item">
+                      <div class="timeline-year">{{ year }}</div>
+                      <div class="timeline-event">{{ event }}</div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+
+          {% when 'stats' %}
+            <div class="content-block stats-block" {{ block.shopify_attributes }}>
+              {% if block.settings.stats_heading != blank %}
+                <h3 class="stats-heading">{{ block.settings.stats_heading }}</h3>
+              {% endif %}
+              <div class="stats-grid">
+                {% for i in (1..4) %}
+                  {% assign number_key = 'stat_number_' | append: i %}
+                  {% assign label_key = 'stat_label_' | append: i %}
+                  {% assign number = block.settings[number_key] %}
+                  {% assign label = block.settings[label_key] %}
+                  {% if number != blank and label != blank %}
+                    <div class="stat-item">
+                      <div class="stat-number">{{ number }}</div>
+                      <div class="stat-label">{{ label }}</div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+
+          {% when 'gallery' %}
+            <div class="content-block gallery-block" {{ block.shopify_attributes }}>
+              {% if block.settings.gallery_heading != blank %}
+                <h3 class="gallery-heading">{{ block.settings.gallery_heading }}</h3>
+              {% endif %}
+              <div class="image-gallery">
+                {% for i in (1..6) %}
+                  {% assign image_key = 'gallery_image_' | append: i %}
+                  {% assign image = block.settings[image_key] %}
+                  {% if image %}
+                    <div class="gallery-item">
+                      {% render 'image', 
+                        image: image,
+                        class: 'gallery-image',
+                        loading: 'lazy',
+                        sizes: '(max-width: 768px) 50vw, 25vw'
+                      %}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+
+        {% endcase %}
+      {% endfor %}
+    </div>
+
+    {% if section.settings.show_cta %}
+      <div class="section-footer">
+        <a href="{{ section.settings.cta_url | default: '#' }}" class="btn btn-primary brand-cta">
+          {{ section.settings.cta_text | default: 'Learn More' }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .brand-story-section {
+    padding: var(--space-xl) var(--mobile-padding);
+  }
+
+  .brand-story-container {
+    max-width: var(--page-width);
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .section-heading {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-family-heading);
+    margin-bottom: var(--space-sm);
+    color: var(--color-foreground);
+  }
+
+  .section-subheading {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .brand-story-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xl);
+  }
+
+  .content-block {
+    width: 100%;
+  }
+
+  /* Text Block */
+  .text-block .rich-text {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    color: var(--color-foreground);
+  }
+
+  .rich-text h3 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-sm);
+    color: var(--color-foreground);
+  }
+
+  .rich-text h4 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--space-sm);
+    color: var(--color-foreground);
+  }
+
+  .rich-text p {
+    margin-bottom: var(--space-md);
+  }
+
+  .rich-text ul,
+  .rich-text ol {
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-lg);
+  }
+
+  .rich-text li {
+    margin-bottom: var(--space-xs);
+  }
+
+  /* Image Block */
+  .image-block .image-container {
+    text-align: center;
+  }
+
+  .brand-image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+  }
+
+  .image-caption {
+    margin-top: var(--space-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+
+  /* Video Block */
+  .video-container {
+    position: relative;
+    width: 100%;
+    text-align: center;
+  }
+
+  .video-iframe {
+    width: 100%;
+    height: 400px;
+    border-radius: var(--border-radius);
+  }
+
+  .brand-video {
+    width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+  }
+
+  .video-caption {
+    margin-top: var(--space-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+
+  /* Quote Block */
+  .brand-quote {
+    text-align: center;
+    margin: 0;
+    padding: var(--space-xl);
+    background-color: var(--color-background-secondary);
+    border-radius: var(--border-radius-lg);
+    border-left: 4px solid var(--color-primary);
+    position: relative;
+  }
+
+  .quote-content {
+    position: relative;
+  }
+
+  .quote-mark {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 4rem;
+    color: var(--color-primary);
+    font-family: serif;
+    line-height: 1;
+  }
+
+  .quote-text {
+    font-size: var(--font-size-lg);
+    font-style: italic;
+    color: var(--color-foreground);
+    margin: var(--space-lg) 0 var(--space-md);
+    line-height: 1.4;
+  }
+
+  .quote-author {
+    font-style: normal;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    display: block;
+  }
+
+  .quote-title {
+    display: block;
+    font-weight: var(--font-weight-normal);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-xs);
+  }
+
+  /* Timeline Block */
+  .timeline-heading {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    color: var(--color-foreground);
+  }
+
+  .timeline {
+    position: relative;
+    padding: var(--space-lg) 0;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--color-border);
+    transform: translateX(-50%);
+  }
+
+  .timeline-item {
+    display: flex;
+    margin-bottom: var(--space-xl);
+    position: relative;
+  }
+
+  .timeline-item:nth-child(odd) {
+    flex-direction: row;
+  }
+
+  .timeline-item:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+
+  .timeline-year,
+  .timeline-event {
+    flex: 1;
+    padding: var(--space-lg);
+  }
+
+  .timeline-year {
+    text-align: center;
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .timeline-year::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .timeline-item:nth-child(odd) .timeline-year::after {
+    right: -6px;
+    left: auto;
+    transform: none;
+  }
+
+  .timeline-item:nth-child(even) .timeline-year::after {
+    left: -6px;
+    transform: none;
+  }
+
+  .timeline-event {
+    background-color: var(--color-background-secondary);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    line-height: 1.4;
+  }
+
+  /* Stats Block */
+  .stats-heading {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    color: var(--color-foreground);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .stat-item {
+    text-align: center;
+    padding: var(--space-lg);
+    background-color: var(--color-background-secondary);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+  }
+
+  .stat-number {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-sm);
+    font-family: var(--font-family-heading);
+  }
+
+  .stat-label {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Gallery Block */
+  .gallery-heading {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    color: var(--color-foreground);
+  }
+
+  .image-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+
+  .gallery-item {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+  }
+
+  .gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-base);
+  }
+
+  .gallery-image:hover {
+    transform: scale(1.05);
+  }
+
+  /* Section Footer */
+  .section-footer {
+    text-align: center;
+    margin-top: var(--space-2xl);
+  }
+
+  .brand-cta {
+    min-width: 200px;
+    padding: var(--space-md) var(--space-xl);
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .timeline::before {
+      left: var(--space-lg);
+    }
+
+    .timeline-item {
+      flex-direction: column !important;
+      padding-left: var(--space-2xl);
+    }
+
+    .timeline-year {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: var(--space-lg);
+      justify-content: flex-start;
+    }
+
+    .timeline-year::after {
+      left: calc(var(--space-lg) - 6px) !important;
+      transform: none !important;
+    }
+
+    .timeline-event {
+      margin-top: var(--space-md);
+    }
+
+    .video-iframe {
+      height: 250px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .brand-story-section {
+      padding: var(--space-2xl) var(--page-margin);
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .image-gallery {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .video-iframe {
+      height: 500px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .brand-story-section {
+      padding: var(--space-3xl) var(--page-margin);
+    }
+
+    .section-heading {
+      font-size: var(--font-size-3xl);
+    }
+
+    .image-gallery {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Brand Story",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Story"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover the passion and vision behind our brand."
+    },
+    {
+      "type": "header",
+      "content": "Call to Action"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show call to action button",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Content",
+          "default": "<p>Tell your brand's story with rich, engaging content that connects with your audience.</p>"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_caption",
+          "label": "Image caption"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Video URL",
+          "info": "YouTube, Vimeo, or direct video file URL"
+        },
+        {
+          "type": "image_picker",
+          "id": "video_poster",
+          "label": "Video poster image"
+        },
+        {
+          "type": "text",
+          "id": "video_caption",
+          "label": "Video caption"
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "name": "Quote",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote_text",
+          "label": "Quote text",
+          "default": "This is where you can add an inspiring quote that represents your brand values."
+        },
+        {
+          "type": "text",
+          "id": "quote_author",
+          "label": "Quote author",
+          "default": "Founder Name"
+        },
+        {
+          "type": "text",
+          "id": "quote_title",
+          "label": "Author title",
+          "default": "CEO & Founder"
+        }
+      ]
+    },
+    {
+      "type": "timeline",
+      "name": "Timeline",
+      "settings": [
+        {
+          "type": "text",
+          "id": "timeline_heading",
+          "label": "Timeline heading",
+          "default": "Our Journey"
+        },
+        {
+          "type": "text",
+          "id": "timeline_year_1",
+          "label": "Year 1",
+          "default": "2020"
+        },
+        {
+          "type": "text",
+          "id": "timeline_event_1",
+          "label": "Event 1",
+          "default": "Company founded with a vision to change the industry."
+        },
+        {
+          "type": "text",
+          "id": "timeline_year_2",
+          "label": "Year 2",
+          "default": "2021"
+        },
+        {
+          "type": "text",
+          "id": "timeline_event_2",
+          "label": "Event 2",
+          "default": "Launched our first product line to great success."
+        },
+        {
+          "type": "text",
+          "id": "timeline_year_3",
+          "label": "Year 3",
+          "default": "2022"
+        },
+        {
+          "type": "text",
+          "id": "timeline_event_3",
+          "label": "Event 3",
+          "default": "Expanded globally and reached 1 million customers."
+        },
+        {
+          "type": "text",
+          "id": "timeline_year_4",
+          "label": "Year 4",
+          "default": "2023"
+        },
+        {
+          "type": "text",
+          "id": "timeline_event_4",
+          "label": "Event 4",
+          "default": "Introduced sustainable practices and eco-friendly products."
+        },
+        {
+          "type": "text",
+          "id": "timeline_year_5",
+          "label": "Year 5",
+          "default": "2024"
+        },
+        {
+          "type": "text",
+          "id": "timeline_event_5",
+          "label": "Event 5",
+          "default": "Continuing to innovate and serve our growing community."
+        }
+      ]
+    },
+    {
+      "type": "stats",
+      "name": "Statistics",
+      "settings": [
+        {
+          "type": "text",
+          "id": "stats_heading",
+          "label": "Statistics heading",
+          "default": "By the Numbers"
+        },
+        {
+          "type": "text",
+          "id": "stat_number_1",
+          "label": "Statistic 1 number",
+          "default": "1M+"
+        },
+        {
+          "type": "text",
+          "id": "stat_label_1",
+          "label": "Statistic 1 label",
+          "default": "Happy Customers"
+        },
+        {
+          "type": "text",
+          "id": "stat_number_2",
+          "label": "Statistic 2 number",
+          "default": "50+"
+        },
+        {
+          "type": "text",
+          "id": "stat_label_2",
+          "label": "Statistic 2 label",
+          "default": "Countries Served"
+        },
+        {
+          "type": "text",
+          "id": "stat_number_3",
+          "label": "Statistic 3 number",
+          "default": "24/7"
+        },
+        {
+          "type": "text",
+          "id": "stat_label_3",
+          "label": "Statistic 3 label",
+          "default": "Customer Support"
+        },
+        {
+          "type": "text",
+          "id": "stat_number_4",
+          "label": "Statistic 4 number",
+          "default": "99%"
+        },
+        {
+          "type": "text",
+          "id": "stat_label_4",
+          "label": "Statistic 4 label",
+          "default": "Satisfaction Rate"
+        }
+      ]
+    },
+    {
+      "type": "gallery",
+      "name": "Image Gallery",
+      "settings": [
+        {
+          "type": "text",
+          "id": "gallery_heading",
+          "label": "Gallery heading",
+          "default": "Behind the Scenes"
+        },
+        {
+          "type": "image_picker",
+          "id": "gallery_image_1",
+          "label": "Gallery image 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "gallery_image_2",
+          "label": "Gallery image 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "gallery_image_3",
+          "label": "Gallery image 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "gallery_image_4",
+          "label": "Gallery image 4"
+        },
+        {
+          "type": "image_picker",
+          "id": "gallery_image_5",
+          "label": "Gallery image 5"
+        },
+        {
+          "type": "image_picker",
+          "id": "gallery_image_6",
+          "label": "Gallery image 6"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Story",
+      "settings": {
+        "heading": "Our Story",
+        "subheading": "Discover the passion and vision behind our brand."
+      },
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "text": "<p>Welcome to our story. We started with a simple mission: to create products that make a difference in people's lives. What began as a small idea has grown into a global community of customers who share our values and vision.</p>"
+          }
+        },
+        {
+          "type": "quote",
+          "settings": {
+            "quote_text": "We believe in creating not just products, but experiences that inspire and empower our customers.",
+            "quote_author": "Jane Smith",
+            "quote_title": "Founder & CEO"
+          }
+        },
+        {
+          "type": "stats",
+          "settings": {
+            "stats_heading": "Our Impact"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

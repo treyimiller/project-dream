@@ -1,26 +1,316 @@
 <!doctype html>
-<html lang="{{ request.locale.iso_code }}">
+<html lang="{{ request.locale.iso_code }}" class="no-js">
   <head>
-    {% # Inlined CSS Variables %}
-    {% render 'css-variables' %}
-
-    {% # Load and preload the critical CSS %}
-    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    {% comment %} Performance optimization: Resource hints {% endcomment %}
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://productreviews.shopifycdn.com">
+    <link rel="dns-prefetch" href="https://ajax.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.gstatic.com">
+    
+    {% comment %} Favicon {% endcomment %}
+    {% if settings.favicon %}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | img_url: '32x32' }}">
+      <link rel="apple-touch-icon" href="{{ settings.favicon | img_url: '180x180' }}">
+    {% endif %}
+    
+    {% comment %} Preload critical CSS and inline above-the-fold styles {% endcomment %}
+    {% if settings.enable_critical_css %}
+      <style>
+        {% comment %} Inline critical CSS for immediate rendering {% endcomment %}
+        {% render 'css-variables' %}
+        
+        {% comment %} Critical above-the-fold styles {% endcomment %}
+        html { font-size: {{ settings.font_size_base | default: 16 }}px; }
+        body { 
+          margin: 0; 
+          font-family: var(--font-family-body); 
+          line-height: var(--line-height-base);
+          color: var(--color-foreground);
+          background-color: var(--color-background);
+        }
+        .no-js { }
+        .js { }
+        
+        {% comment %} Critical header styles {% endcomment %}
+        .header { 
+          position: sticky; 
+          top: 0; 
+          z-index: var(--z-index-sticky);
+          background-color: var(--color-background);
+          border-bottom: 1px solid var(--color-border);
+        }
+      </style>
+    {% else %}
+      {% render 'css-variables' %}
+    {% endif %}
+    
+    {% comment %} Load non-critical CSS asynchronously {% endcomment %}
+    {% unless settings.enable_critical_css %}
+      {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+    {% endunless %}
     {{ 'project-dream-base.css' | asset_url | stylesheet_tag: preload: true }}
-
-    {% # Social, title, etc. %}
+    
+    {% comment %} Preload fonts for performance {% endcomment %}
+    {% if settings.enable_preload_fonts %}
+      {% case settings.font_pairing %}
+        {% when 'classic-readable' %}
+          <link rel="preload" href="https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLDz8Z1xlFQ.woff2" as="font" type="font/woff2" crossorigin>
+          <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v34/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVc.woff2" as="font" type="font/woff2" crossorigin>
+        {% when 'tech-clean' %}
+          <link rel="preload" href="https://fonts.gstatic.com/s/montserrat/v25/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtr6Hw5aXp-obK4.woff2" as="font" type="font/woff2" crossorigin>
+          <link rel="preload" href="https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2" as="font" type="font/woff2" crossorigin>
+        {% else %}
+          <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2" as="font" type="font/woff2" crossorigin>
+      {% endcase %}
+    {% endif %}
+    
+    {% comment %} SEO and meta tags {% endcomment %}
     {% render 'meta-tags' %}
+    
+    {% comment %} Schema.org structured data {% endcomment %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "url": {{ request.origin | append: page.url | json }},
+      {% if shop.description != blank %}
+        "description": {{ shop.description | json }},
+      {% endif %}
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ request.origin | append: routes.search_url | append: "?q={search_term_string}" | json }},
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    
+    {% if template contains 'product' %}
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": {{ product.title | json }},
+        "description": {{ product.description | strip_html | json }},
+        "image": [
+          {% for image in product.images limit: 3 %}
+            {{ image | img_url: '800x800' | prepend: 'https:' | json }}{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        ],
+        "brand": {
+          "@type": "Brand",
+          "name": {{ product.vendor | json }}
+        },
+        "offers": {
+          "@type": "Offer",
+          "url": {{ request.origin | append: product.url | json }},
+          "priceCurrency": {{ cart.currency.iso_code | json }},
+          "price": {{ product.price | divided_by: 100.0 | json }},
+          "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+        }
+      }
+      </script>
+    {% endif %}
 
     {{ content_for_header }}
     
-    <script src="{{ 'urgency-timer.js' | asset_url }}" defer></script>
+    {% comment %} JavaScript loading strategy {% endcomment %}
+    <script>
+      // Feature detection and modern browser check
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+      
+      // Critical JavaScript for immediate functionality
+      window.Shopify = window.Shopify || {};
+      window.Shopify.currency = {{ cart.currency | json }};
+      window.Shopify.money_format = {{ shop.money_format | json }};
+      window.Shopify.formatMoney = function(cents, format) {
+        if (typeof cents == 'string') { cents = cents.replace('.',''); }
+        var value = '';
+        var placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+        var formatString = (format || this.money_format);
+        
+        function defaultOption(opt, def) {
+           return (typeof opt == 'undefined' ? def : opt);
+        }
+        
+        function formatWithDelimiters(number, precision, thousands, decimal) {
+          precision = defaultOption(precision, 2);
+          thousands = defaultOption(thousands, ',');
+          decimal   = defaultOption(decimal, '.');
+          
+          if (isNaN(number) || number == null) { return 0; }
+          
+          number = (number/100.0).toFixed(precision);
+          
+          var parts   = number.split('.'),
+              dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands),
+              cents   = parts[1] ? (decimal + parts[1]) : '';
+          
+          return dollars + cents;
+        }
+        
+        switch(formatString.match(placeholderRegex)[1]) {
+          case 'amount':
+            value = formatWithDelimiters(cents, 2);
+            break;
+          case 'amount_no_decimals':
+            value = formatWithDelimiters(cents, 0);
+            break;
+          case 'amount_with_comma_separator':
+            value = formatWithDelimiters(cents, 2, '.', ',');
+            break;
+          case 'amount_no_decimals_with_comma_separator':
+            value = formatWithDelimiters(cents, 0, '.', ',');
+            break;
+        }
+        
+        return formatString.replace(placeholderRegex, value);
+      };
+      
+      // Performance tracking
+      if ('PerformanceObserver' in window) {
+        const observer = new PerformanceObserver(function(list) {
+          for (const entry of list.getEntries()) {
+            if (entry.entryType === 'largest-contentful-paint') {
+              // Track LCP
+              if (typeof gtag !== 'undefined') {
+                gtag('event', 'web_vitals', {
+                  event_category: 'performance',
+                  event_label: 'LCP',
+                  value: Math.round(entry.startTime),
+                  custom_parameter_1: Math.round(entry.startTime)
+                });
+              }
+            }
+          }
+        });
+        observer.observe({entryTypes: ['largest-contentful-paint']});
+      }
+    </script>
+    
+    {% comment %} Load theme JavaScript with proper defer/async {% endcomment %}
+    {% if template contains 'product' %}
+      <script src="{{ 'urgency-timer.js' | asset_url }}" defer></script>
+    {% endif %}
+    
+    {% comment %} Service Worker for caching (if enabled) {% endcomment %}
+    {% if settings.enable_service_worker %}
+      <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js', { scope: '/' });
+          });
+        }
+      </script>
+    {% endif %}
   </head>
 
-  <body>
-    {% sections 'header-group' %}
+  <body class="template-{{ request.page_type | handle }}{% if customer %} customer-logged-in{% endif %}{% if template.directory %} template-directory-{{ template.directory }}{% endif %}">
+    {% comment %} Skip to content link for accessibility {% endcomment %}
+    <a class="skip-to-content-link visually-hidden" href="#MainContent">
+      {{ 'accessibility.skip_to_text' | t }}
+    </a>
+    
+    {% comment %} Page content {% endcomment %}
+    <div id="PageContainer" class="page-container">
+      {% sections 'header-group' %}
 
-    {{ content_for_layout }}
+      <main id="MainContent" class="main-content" role="main" tabindex="-1">
+        {{ content_for_layout }}
+      </main>
 
-    {% sections 'footer-group' %}
+      {% sections 'footer-group' %}
+    </div>
+    
+    {% comment %} Load non-critical JavaScript at the end {% endcomment %}
+    <script>
+      // Lazy load non-critical features
+      function loadScript(src, callback) {
+        const script = document.createElement('script');
+        script.src = src;
+        script.defer = true;
+        if (callback) script.onload = callback;
+        document.head.appendChild(script);
+      }
+      
+      // Load analytics after page is interactive
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          // Load analytics scripts here
+        });
+      } else {
+        // DOM is already ready
+        // Load analytics scripts here
+      }
+      
+      // Preload hover states for better UX
+      const linkElements = document.querySelectorAll('a[href^="/"]');
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            const link = entry.target;
+            link.addEventListener('mouseenter', function() {
+              const linkHref = this.getAttribute('href');
+              if (linkHref && !document.querySelector(`link[rel="prefetch"][href="${linkHref}"]`)) {
+                const prefetchLink = document.createElement('link');
+                prefetchLink.rel = 'prefetch';
+                prefetchLink.href = linkHref;
+                document.head.appendChild(prefetchLink);
+              }
+            }, { once: true });
+            observer.unobserve(link);
+          }
+        });
+      });
+      
+      linkElements.forEach(function(link) {
+        observer.observe(link);
+      });
+    </script>
+    
+    {% comment %} Accessibility styles {% endcomment %}
+    <style>
+      .visually-hidden {
+        position: absolute !important;
+        overflow: hidden;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        border: 0;
+        clip: rect(0 0 0 0);
+        word-wrap: normal !important;
+      }
+      
+      .skip-to-content-link {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        color: var(--color-foreground);
+        background-color: var(--color-background);
+        padding: var(--space-sm);
+        text-decoration: none;
+        transform: translateY(-100%);
+        transition: transform 0.3s;
+      }
+      
+      .skip-to-content-link:focus {
+        transform: translateY(0);
+      }
+      
+      @media (prefers-reduced-motion: reduce) {
+        .skip-to-content-link {
+          transition: none;
+        }
+      }
+    </style>
   </body>
 </html>

@@ -1,1 +1,632 @@
-[]
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Project-Dream",
+    "theme_version": "1.0.0",
+    "theme_author": "Devcogent",
+    "theme_documentation_url": "https://devcogent.com/docs/project-dream",
+    "theme_support_url": "https://devcogent.com/support"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Color Schemes"
+      },
+      {
+        "type": "paragraph",
+        "content": "Choose from professionally designed color schemes or create your own custom palette."
+      },
+      {
+        "type": "select",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "options": [
+          {
+            "value": "modern-minimalist",
+            "label": "Modern Minimalist - Clean whites and deep blacks"
+          },
+          {
+            "value": "bold-contrast",
+            "label": "Bold Contrast - High-impact black and electric blue"
+          },
+          {
+            "value": "warm-earth",
+            "label": "Warm Earth - Natural browns and golden tones"
+          },
+          {
+            "value": "ocean-breeze",
+            "label": "Ocean Breeze - Calming blues and sea greens"
+          },
+          {
+            "value": "sunset-vibes",
+            "label": "Sunset Vibes - Warm oranges and deep purples"
+          },
+          {
+            "value": "forest-green",
+            "label": "Forest Green - Natural greens and earth tones"
+          },
+          {
+            "value": "royal-purple",
+            "label": "Royal Purple - Luxurious purples and gold accents"
+          },
+          {
+            "value": "neon-dark",
+            "label": "Neon Dark - Dark theme with neon accents"
+          },
+          {
+            "value": "custom",
+            "label": "Custom - Design your own palette"
+          }
+        ],
+        "default": "modern-minimalist"
+      },
+      {
+        "type": "header",
+        "content": "Custom Colors"
+      },
+      {
+        "type": "paragraph",
+        "content": "Customize individual colors when 'Custom' scheme is selected."
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "color_foreground",
+        "label": "Text",
+        "default": "#121212"
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary",
+        "default": "#007bff"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "Secondary",
+        "default": "#6c757d"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent",
+        "default": "#17a2b8"
+      },
+      {
+        "type": "color",
+        "id": "color_success",
+        "label": "Success",
+        "default": "#28a745"
+      },
+      {
+        "type": "color",
+        "id": "color_warning",
+        "label": "Warning",
+        "default": "#ffc107"
+      },
+      {
+        "type": "color",
+        "id": "color_error",
+        "label": "Error",
+        "default": "#dc3545"
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "label": "Borders",
+        "default": "#dee2e6"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Font Pairings"
+      },
+      {
+        "type": "paragraph",
+        "content": "Choose from professionally paired font combinations or customize individually."
+      },
+      {
+        "type": "select",
+        "id": "font_pairing",
+        "label": "Font pairing",
+        "options": [
+          {
+            "value": "modern-sans",
+            "label": "Modern Sans - Inter for both headings and body"
+          },
+          {
+            "value": "classic-readable",
+            "label": "Classic Readable - Poppins headings, Open Sans body"
+          },
+          {
+            "value": "editorial-style",
+            "label": "Editorial Style - Playfair Display headings, Source Sans body"
+          },
+          {
+            "value": "tech-clean",
+            "label": "Tech Clean - Montserrat headings, Roboto body"
+          },
+          {
+            "value": "friendly-approachable",
+            "label": "Friendly Approachable - Nunito for both headings and body"
+          },
+          {
+            "value": "sophisticated",
+            "label": "Sophisticated - Lora headings, Lato body"
+          },
+          {
+            "value": "bold-impact",
+            "label": "Bold Impact - Oswald headings, PT Sans body"
+          },
+          {
+            "value": "minimal-geometric",
+            "label": "Minimal Geometric - Work Sans for both headings and body"
+          },
+          {
+            "value": "custom",
+            "label": "Custom - Choose your own fonts"
+          }
+        ],
+        "default": "modern-sans"
+      },
+      {
+        "type": "header",
+        "content": "Custom Font Selection"
+      },
+      {
+        "type": "paragraph",
+        "content": "Customize individual fonts when 'Custom' pairing is selected."
+      },
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Heading font",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Body font",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "header",
+        "content": "Typography Settings"
+      },
+      {
+        "type": "range",
+        "id": "font_size_base",
+        "label": "Base font size",
+        "min": 14,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "font_size_scale",
+        "label": "Font size scale",
+        "min": 1.1,
+        "max": 1.5,
+        "step": 0.05,
+        "default": 1.25,
+        "info": "Controls how much larger each heading level becomes"
+      },
+      {
+        "type": "range",
+        "id": "line_height_base",
+        "label": "Base line height",
+        "min": 1.2,
+        "max": 2.0,
+        "step": 0.1,
+        "default": 1.6
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Page Layout"
+      },
+      {
+        "type": "range",
+        "id": "page_width",
+        "label": "Page width",
+        "min": 1200,
+        "max": 1600,
+        "step": 50,
+        "unit": "px",
+        "default": 1400
+      },
+      {
+        "type": "range",
+        "id": "page_margin",
+        "label": "Page margins",
+        "min": 16,
+        "max": 48,
+        "step": 4,
+        "unit": "px",
+        "default": 24
+      },
+      {
+        "type": "header",
+        "content": "Spacing"
+      },
+      {
+        "type": "range",
+        "id": "spacing_base",
+        "label": "Base spacing",
+        "min": 8,
+        "max": 24,
+        "step": 2,
+        "unit": "px",
+        "default": 16,
+        "info": "Controls the base spacing unit used throughout the theme"
+      },
+      {
+        "type": "header",
+        "content": "Cards & Components"
+      },
+      {
+        "type": "range",
+        "id": "border_radius",
+        "label": "Border radius",
+        "min": 0,
+        "max": 24,
+        "step": 2,
+        "unit": "px",
+        "default": 8
+      },
+      {
+        "type": "range",
+        "id": "card_shadow",
+        "label": "Card shadow intensity",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "default": 2
+      }
+    ]
+  },
+  {
+    "name": "Buttons",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Button Styles"
+      },
+      {
+        "type": "select",
+        "id": "button_style",
+        "label": "Button style",
+        "options": [
+          {
+            "value": "solid",
+            "label": "Solid"
+          },
+          {
+            "value": "outline",
+            "label": "Outline"
+          },
+          {
+            "value": "ghost",
+            "label": "Ghost"
+          }
+        ],
+        "default": "solid"
+      },
+      {
+        "type": "select",
+        "id": "button_size",
+        "label": "Button size",
+        "options": [
+          {
+            "value": "small",
+            "label": "Small"
+          },
+          {
+            "value": "medium",
+            "label": "Medium"
+          },
+          {
+            "value": "large",
+            "label": "Large"
+          }
+        ],
+        "default": "medium"
+      },
+      {
+        "type": "range",
+        "id": "button_border_radius",
+        "label": "Button border radius",
+        "min": 0,
+        "max": 50,
+        "step": 2,
+        "unit": "px",
+        "default": 6
+      },
+      {
+        "type": "checkbox",
+        "id": "button_uppercase",
+        "label": "Uppercase text",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "button_font_weight",
+        "label": "Font weight",
+        "min": 400,
+        "max": 700,
+        "step": 100,
+        "default": 600
+      }
+    ]
+  },
+  {
+    "name": "Mobile",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Mobile Optimization"
+      },
+      {
+        "type": "paragraph",
+        "content": "Optimize the mobile experience for dropshipping conversions."
+      },
+      {
+        "type": "range",
+        "id": "mobile_padding",
+        "label": "Mobile padding",
+        "min": 12,
+        "max": 32,
+        "step": 4,
+        "unit": "px",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "mobile_button_height",
+        "label": "Mobile button height",
+        "min": 44,
+        "max": 64,
+        "step": 4,
+        "unit": "px",
+        "default": 56,
+        "info": "Minimum recommended: 44px for touch accessibility"
+      },
+      {
+        "type": "checkbox",
+        "id": "mobile_sticky_header",
+        "label": "Sticky header on mobile",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "mobile_hide_breadcrumbs",
+        "label": "Hide breadcrumbs on mobile",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Performance",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Performance Optimization"
+      },
+      {
+        "type": "paragraph",
+        "content": "Optimize loading speed and performance for better conversions."
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_lazy_loading",
+        "label": "Enable lazy loading",
+        "default": true,
+        "info": "Improves page load speed by loading images as they come into view"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_critical_css",
+        "label": "Enable critical CSS",
+        "default": true,
+        "info": "Inlines critical CSS for faster initial page render"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_preload_fonts",
+        "label": "Preload fonts",
+        "default": true,
+        "info": "Preloads font files to prevent layout shifts"
+      },
+      {
+        "type": "select",
+        "id": "image_quality",
+        "label": "Image quality",
+        "options": [
+          {
+            "value": "auto",
+            "label": "Auto (recommended)"
+          },
+          {
+            "value": "high",
+            "label": "High quality"
+          },
+          {
+            "value": "medium",
+            "label": "Medium quality"
+          },
+          {
+            "value": "low",
+            "label": "Low quality"
+          }
+        ],
+        "default": "auto"
+      }
+    ]
+  },
+  {
+    "name": "Conversion Tools",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Global Conversion Settings"
+      },
+      {
+        "type": "paragraph",
+        "content": "Configure conversion tools that appear across the site."
+      },
+      {
+        "type": "checkbox",
+        "id": "show_cart_drawer",
+        "label": "Enable cart drawer",
+        "default": true,
+        "info": "Shows a sliding cart drawer instead of redirecting to cart page"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_quick_add",
+        "label": "Enable quick add to cart",
+        "default": true,
+        "info": "Allows adding products to cart from collection pages"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_recently_viewed",
+        "label": "Show recently viewed products",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "recently_viewed_limit",
+        "label": "Recently viewed limit",
+        "min": 3,
+        "max": 12,
+        "step": 1,
+        "default": 6
+      },
+      {
+        "type": "header",
+        "content": "Trust Signals"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_security_badges",
+        "label": "Show security badges",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_payment_icons",
+        "label": "Show payment icons",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_shipping_info",
+        "label": "Show shipping information",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold",
+        "default": "50",
+        "info": "Show free shipping message when cart total is below this amount"
+      }
+    ]
+  },
+  {
+    "name": "Social Media",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Social Media Links"
+      },
+      {
+        "type": "paragraph",
+        "content": "Add your social media profiles to build trust and engagement."
+      },
+      {
+        "type": "text",
+        "id": "social_instagram",
+        "label": "Instagram URL",
+        "info": "https://instagram.com/yourusername"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok",
+        "label": "TikTok URL",
+        "info": "https://tiktok.com/@yourusername"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook",
+        "label": "Facebook URL",
+        "info": "https://facebook.com/yourpage"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube",
+        "label": "YouTube URL",
+        "info": "https://youtube.com/yourchannel"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter",
+        "label": "Twitter URL",
+        "info": "https://twitter.com/yourusername"
+      },
+      {
+        "type": "text",
+        "id": "social_snapchat",
+        "label": "Snapchat URL",
+        "info": "https://snapchat.com/add/yourusername"
+      },
+      {
+        "type": "header",
+        "content": "Social Media Integration"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_social_sharing",
+        "label": "Enable social sharing",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_social_proof",
+        "label": "Show social proof",
+        "default": true,
+        "info": "Display social media follower counts and engagement"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "Upload a square image (at least 32x32px) for your favicon"
+      }
+    ]
+  }
+]

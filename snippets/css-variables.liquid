@@ -1,33 +1,130 @@
+{% comment %}
+  Enhanced CSS Variables for Project-Dream theme
+  Supports font pairings, color schemes, and mobile-first design
+{% endcomment %}
+
 {% style %}
-  {% # Loads all font variantions with display: swap %}
-  {{ settings.type_primary_font | font_face: font_display: 'swap' }}
-  {{ settings.type_primary_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
-  {{ settings.type_primary_font | font_modify: 'weight', 'bold' | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
-  {{ settings.type_primary_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+  {% comment %} Font Pairing System {% endcomment %}
+  {% liquid
+    assign current_pairing = settings.font_pairing | default: 'modern-sans'
+    assign heading_font = settings.font_heading
+    assign body_font = settings.font_body
+    
+    case current_pairing
+      when 'modern-sans'
+        assign heading_family = 'Inter, system-ui, -apple-system, sans-serif'
+        assign body_family = 'Inter, system-ui, -apple-system, sans-serif'
+      when 'classic-readable'
+        assign heading_family = 'Poppins, system-ui, -apple-system, sans-serif'
+        assign body_family = 'Open Sans, system-ui, -apple-system, sans-serif'
+      when 'editorial-style'
+        assign heading_family = 'Playfair Display, Georgia, serif'
+        assign body_family = 'Source Sans Pro, system-ui, -apple-system, sans-serif'
+      when 'tech-clean'
+        assign heading_family = 'Montserrat, system-ui, -apple-system, sans-serif'
+        assign body_family = 'Roboto, system-ui, -apple-system, sans-serif'
+      when 'friendly-approachable'
+        assign heading_family = 'Nunito, system-ui, -apple-system, sans-serif'
+        assign body_family = 'Nunito, system-ui, -apple-system, sans-serif'
+      when 'sophisticated'
+        assign heading_family = 'Lora, Georgia, serif'
+        assign body_family = 'Lato, system-ui, -apple-system, sans-serif'
+      when 'bold-impact'
+        assign heading_family = 'Oswald, system-ui, -apple-system, sans-serif'
+        assign body_family = 'PT Sans, system-ui, -apple-system, sans-serif'
+      when 'minimal-geometric'
+        assign heading_family = 'Work Sans, system-ui, -apple-system, sans-serif'
+        assign body_family = 'Work Sans, system-ui, -apple-system, sans-serif'
+      when 'custom'
+        assign heading_family = heading_font.family | append: ', ' | append: heading_font.fallback_families
+        assign body_family = body_font.family | append: ', ' | append: body_font.fallback_families
+      else
+        assign heading_family = 'Inter, system-ui, -apple-system, sans-serif'
+        assign body_family = 'Inter, system-ui, -apple-system, sans-serif'
+    endcase
+  %}
+
+  {% comment %} Load fonts with display: swap for performance {% endcomment %}
+  {% if current_pairing == 'custom' %}
+    {{ heading_font | font_face: font_display: 'swap' }}
+    {{ heading_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+    {{ body_font | font_face: font_display: 'swap' }}
+    {{ body_font | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+    {{ body_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+  {% else %}
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    {% case current_pairing %}
+      {% when 'classic-readable' %}
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Open+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+      {% when 'editorial-style' %}
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+      {% when 'tech-clean' %}
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+      {% when 'friendly-approachable' %}
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+      {% when 'sophisticated' %}
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lato:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+      {% when 'bold-impact' %}
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+      {% when 'minimal-geometric' %}
+        @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+    {% endcase %}
+  {% endif %}
 
   :root {
-    --font-primary--family: {{ settings.type_primary_font.family }}, {{ settings.type_primary_font.fallback_families }};
-    --font-primary--style: {{ settings.type_primary_font.style }};
-    --font-primary--weight: {{ settings.type_primary_font.weight }};
-    --font-heading--family: {{ settings.type_heading_font.family | default: settings.type_primary_font.family }}, {{ settings.type_heading_font.fallback_families | default: settings.type_primary_font.fallback_families }};
-    --page-width: {{ settings.max_page_width }};
-    --page-margin: {{ settings.min_page_margin }}px;
-    --style-border-radius-inputs: {{ settings.input_corner_radius }}px;
+    {% comment %} Typography Variables {% endcomment %}
+    --font-family-heading: {{ heading_family }};
+    --font-family-body: {{ body_family }};
+    --font-size-base: {{ settings.font_size_base | default: 16 }}px;
+    --font-size-scale: {{ settings.font_size_scale | default: 1.25 }};
+    --line-height-base: {{ settings.line_height_base | default: 1.6 }};
     
-    /* Mobile-First Spacing */
-    --mobile-section-padding: {{ settings.mobile_section_padding | default: 2 }}rem;
-    --desktop-section-padding: {{ settings.desktop_section_padding | default: 4 }}rem;
+    {% comment %} Fluid Typography Scale {% endcomment %}
+    --font-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+    --font-size-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+    --font-size-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+    --font-size-lg: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+    --font-size-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+    --font-size-2xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+    --font-size-3xl: clamp(2rem, 1.7rem + 1.5vw, 3rem);
     
-    /* Border Radius */
-    --button-border-radius: {{ settings.button_border_radius | default: 8 }}px;
-    --card-border-radius: {{ settings.card_border_radius | default: 12 }}px;
+    {% comment %} Font Weights {% endcomment %}
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
     
-    /* Shadows */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+    {% comment %} Layout Variables {% endcomment %}
+    --page-width: {{ settings.page_width | default: 1400 }}px;
+    --page-margin: {{ settings.page_margin | default: 24 }}px;
+    --spacing-base: {{ settings.spacing_base | default: 16 }}px;
     
-    /* Z-index Scale */
+    {% comment %} Fluid Spacing Scale {% endcomment %}
+    --space-xs: calc(var(--spacing-base) * 0.25);
+    --space-sm: calc(var(--spacing-base) * 0.5);
+    --space-md: var(--spacing-base);
+    --space-lg: calc(var(--spacing-base) * 1.5);
+    --space-xl: calc(var(--spacing-base) * 2);
+    --space-2xl: calc(var(--spacing-base) * 3);
+    --space-3xl: calc(var(--spacing-base) * 4);
+    
+    {% comment %} Mobile-specific spacing {% endcomment %}
+    --mobile-padding: {{ settings.mobile_padding | default: 16 }}px;
+    --mobile-button-height: {{ settings.mobile_button_height | default: 56 }}px;
+    
+    {% comment %} Border Radius {% endcomment %}
+    --border-radius: {{ settings.border_radius | default: 8 }}px;
+    --border-radius-sm: calc(var(--border-radius) * 0.5);
+    --border-radius-lg: calc(var(--border-radius) * 1.5);
+    --button-border-radius: {{ settings.button_border_radius | default: 6 }}px;
+    
+    {% comment %} Shadows {% endcomment %}
+    {% assign shadow_intensity = settings.card_shadow | default: 2 %}
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, {{ shadow_intensity | times: 0.05 }});
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, {{ shadow_intensity | times: 0.075 }});
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, {{ shadow_intensity | times: 0.1 }});
+    
+    {% comment %} Z-index Scale {% endcomment %}
     --z-index-dropdown: 10;
     --z-index-sticky: 20;
     --z-index-fixed: 30;
@@ -35,12 +132,25 @@
     --z-index-modal: 50;
     --z-index-popover: 60;
     --z-index-tooltip: 70;
+    
+    {% comment %} Transitions {% endcomment %}
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.25s ease;
+    --transition-slow: 0.35s ease;
+    
+    {% comment %} Breakpoints for CSS {% endcomment %}
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
   }
 
-  {% comment %} Color Scheme Logic {% endcomment %}
+  {% comment %} Enhanced Color Scheme Logic {% endcomment %}
   {% liquid
-    case settings.color_scheme
-      when 'modern_minimalist'
+    assign current_scheme = settings.color_scheme | default: 'modern-minimalist'
+    
+    case current_scheme
+      when 'modern-minimalist'
         assign scheme_bg = '#ffffff'
         assign scheme_fg = '#1a1a1a'
         assign scheme_primary = '#000000'
@@ -50,17 +160,17 @@
         assign scheme_warning = '#ffa500'
         assign scheme_error = '#ff4545'
         assign scheme_border = '#e5e5e5'
-      when 'bold_contrast'
+      when 'bold-contrast'
         assign scheme_bg = '#ffffff'
         assign scheme_fg = '#000000'
         assign scheme_primary = '#000000'
         assign scheme_secondary = '#333333'
-        assign scheme_accent = '#ff0000'
+        assign scheme_accent = '#0066ff'
         assign scheme_success = '#00ff00'
         assign scheme_warning = '#ffaa00'
         assign scheme_error = '#ff0000'
         assign scheme_border = '#cccccc'
-      when 'warm_earth'
+      when 'warm-earth'
         assign scheme_bg = '#faf8f5'
         assign scheme_fg = '#2d1810'
         assign scheme_primary = '#8b4513'
@@ -70,7 +180,7 @@
         assign scheme_warning = '#ff8c00'
         assign scheme_error = '#dc143c'
         assign scheme_border = '#ddd5cc'
-      when 'ocean_breeze'
+      when 'ocean-breeze'
         assign scheme_bg = '#f0f8ff'
         assign scheme_fg = '#1e3a5f'
         assign scheme_primary = '#006994'
@@ -80,7 +190,7 @@
         assign scheme_warning = '#ffa500'
         assign scheme_error = '#ff6347'
         assign scheme_border = '#b0d4e8'
-      when 'sunset_vibes'
+      when 'sunset-vibes'
         assign scheme_bg = '#fff5ee'
         assign scheme_fg = '#2f1b14'
         assign scheme_primary = '#8b3a3a'
@@ -90,7 +200,7 @@
         assign scheme_warning = '#ffa500'
         assign scheme_error = '#dc143c'
         assign scheme_border = '#f4a460'
-      when 'forest_green'
+      when 'forest-green'
         assign scheme_bg = '#f0fff0'
         assign scheme_fg = '#0f2f0f'
         assign scheme_primary = '#228b22'
@@ -100,7 +210,7 @@
         assign scheme_warning = '#ffa500'
         assign scheme_error = '#ff6347'
         assign scheme_border = '#98fb98'
-      when 'royal_purple'
+      when 'royal-purple'
         assign scheme_bg = '#faf8ff'
         assign scheme_fg = '#2d1b3d'
         assign scheme_primary = '#663399'
@@ -110,9 +220,19 @@
         assign scheme_warning = '#ffa500'
         assign scheme_error = '#ff6347'
         assign scheme_border = '#ddd0e8'
-      else
-        assign scheme_bg = settings.background_color
-        assign scheme_fg = settings.foreground_color
+      when 'neon-dark'
+        assign scheme_bg = '#0a0a0a'
+        assign scheme_fg = '#ffffff'
+        assign scheme_primary = '#00ff41'
+        assign scheme_secondary = '#333333'
+        assign scheme_accent = '#ff0080'
+        assign scheme_success = '#00ff41'
+        assign scheme_warning = '#ffff00'
+        assign scheme_error = '#ff0040'
+        assign scheme_border = '#333333'
+      when 'custom'
+        assign scheme_bg = settings.color_background
+        assign scheme_fg = settings.color_foreground
         assign scheme_primary = settings.color_primary
         assign scheme_secondary = settings.color_secondary
         assign scheme_accent = settings.color_accent
@@ -120,29 +240,114 @@
         assign scheme_warning = settings.color_warning
         assign scheme_error = settings.color_error
         assign scheme_border = settings.color_border
+      else
+        assign scheme_bg = '#ffffff'
+        assign scheme_fg = '#1a1a1a'
+        assign scheme_primary = '#000000'
+        assign scheme_secondary = '#666666'
+        assign scheme_accent = '#0066cc'
+        assign scheme_success = '#00d26a'
+        assign scheme_warning = '#ffa500'
+        assign scheme_error = '#ff4545'
+        assign scheme_border = '#e5e5e5'
     endcase
   %}
 
   :root {
-    /* Project-Dream Color Palette */
-    --color-background: {{ scheme_bg | default: '#ffffff' }};
-    --color-foreground: {{ scheme_fg | default: '#1a1a1a' }};
-    --color-primary: {{ scheme_primary | default: '#000000' }};
-    --color-secondary: {{ scheme_secondary | default: '#666666' }};
-    --color-accent: {{ scheme_accent | default: '#ff4545' }};
-    --color-success: {{ scheme_success | default: '#00d26a' }};
-    --color-warning: {{ scheme_warning | default: '#ffa500' }};
-    --color-error: {{ scheme_error | default: '#ff4545' }};
-    --color-border: {{ scheme_border | default: '#e5e5e5' }};
-    --color-media-bg: {{ scheme_border | default: '#f5f5f5' }};
+    {% comment %} Core Color Palette {% endcomment %}
+    --color-background: {{ scheme_bg }};
+    --color-foreground: {{ scheme_fg }};
+    --color-primary: {{ scheme_primary }};
+    --color-secondary: {{ scheme_secondary }};
+    --color-accent: {{ scheme_accent }};
+    --color-success: {{ scheme_success }};
+    --color-warning: {{ scheme_warning }};
+    --color-error: {{ scheme_error }};
+    --color-border: {{ scheme_border }};
     
-    /* Button Colors */
-    --color-button-primary-bg: {{ settings.color_button_primary_bg | default: scheme_primary | default: '#000000' }};
-    --color-button-primary-text: {{ settings.color_button_primary_text | default: '#ffffff' }};
-    --color-button-primary-bg-hover: {{ settings.color_button_primary_bg_hover | default: scheme_secondary | default: '#333333' }};
-    --color-button-secondary-text: {{ scheme_primary | default: '#000000' }};
+    {% comment %} Semantic Colors {% endcomment %}
+    --color-text: var(--color-foreground);
+    --color-text-secondary: {{ scheme_secondary }};
+    --color-text-muted: {{ scheme_border }};
+    --color-background-secondary: {{ scheme_bg | color_modify: 'alpha', 0.5 }};
+    --color-primary-text: {% if scheme_primary == '#ffffff' or scheme_primary contains 'fff' %}#000000{% else %}#ffffff{% endif %};
     
-    /* Conversion Elements */
-    --urgency-color: {{ scheme_accent | default: '#ff4545' }};
+    {% comment %} Button Colors {% endcomment %}
+    --color-button-primary-bg: var(--color-primary);
+    --color-button-primary-text: var(--color-primary-text);
+    --color-button-primary-bg-hover: {{ scheme_primary | color_modify: 'alpha', 0.8 }};
+    --color-button-secondary-bg: transparent;
+    --color-button-secondary-text: var(--color-primary);
+    --color-button-secondary-border: var(--color-primary);
+    
+    {% comment %} Conversion Tool Colors {% endcomment %}
+    --urgency-color: var(--color-accent);
+    --stock-counter-color: var(--color-warning);
+    --success-color: var(--color-success);
+    
+    {% comment %} Component-specific Variables {% endcomment %}
+    --header-height: 60px;
+    --mobile-header-height: 56px;
+    --footer-bg: var(--color-background-secondary);
+    
+    {% comment %} Product Aspect Ratios {% endcomment %}
+    --product-aspect-ratio: 1;
+    --hero-aspect-ratio: 16/9;
+    --vertical-aspect-ratio: 9/16;
+    
+    {% comment %} Button Styles {% endcomment %}
+    {% assign button_style = settings.button_style | default: 'solid' %}
+    {% assign button_size = settings.button_size | default: 'medium' %}
+    
+    {% case button_size %}
+      {% when 'small' %}
+        --button-padding-y: 0.5rem;
+        --button-padding-x: 1rem;
+        --button-font-size: var(--font-size-sm);
+      {% when 'large' %}
+        --button-padding-y: 1rem;
+        --button-padding-x: 2rem;
+        --button-font-size: var(--font-size-lg);
+      {% else %}
+        --button-padding-y: 0.75rem;
+        --button-padding-x: 1.5rem;
+        --button-font-size: var(--font-size-base);
+    {% endcase %}
+    
+    --button-font-weight: {{ settings.button_font_weight | default: 600 }};
+    {% if settings.button_uppercase %}--button-text-transform: uppercase;{% else %}--button-text-transform: none;{% endif %}
+  }
+
+  {% comment %} Mobile-specific adjustments {% endcomment %}
+  @media (max-width: 768px) {
+    :root {
+      --page-margin: var(--mobile-padding);
+      --space-lg: var(--space-md);
+      --space-xl: var(--space-lg);
+      --space-2xl: var(--space-xl);
+      
+      {% comment %} Mobile font size adjustments {% endcomment %}
+      --font-size-3xl: clamp(1.75rem, 1.5rem + 1.25vw, 2.5rem);
+      --font-size-2xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+    }
+  }
+
+  {% comment %} High contrast mode support {% endcomment %}
+  @media (prefers-contrast: high) {
+    :root {
+      --color-border: #000000;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  {% comment %} Reduced motion support {% endcomment %}
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --transition-fast: 0s;
+      --transition-base: 0s;
+      --transition-slow: 0s;
+    }
   }
 {% endstyle %}
