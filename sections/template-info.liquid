@@ -1,0 +1,66 @@
+{% comment %}
+  Template Info Section - Only visible in admin
+{% endcomment %}
+
+<div style="display: none;">
+  <!-- This section only provides settings for the customizer -->
+</div>
+
+{% schema %}
+{
+  "name": "Template Info",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Homepage Template"
+    },
+    {
+      "type": "paragraph",
+      "content": "Choose which homepage template to use for your store."
+    },
+    {
+      "type": "select",
+      "id": "current_layout",
+      "label": "Current homepage layout",
+      "options": [
+        {
+          "value": "showcase",
+          "label": "Theme Showcase - Demo all features"
+        },
+        {
+          "value": "single-product",
+          "label": "Single Product - Hero product focus"
+        },
+        {
+          "value": "multi-product",
+          "label": "Multi Product - Collections showcase"
+        }
+      ],
+      "default": "showcase",
+      "info": "Select the layout that best fits your business model"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_guide",
+      "label": "Show template switching guide",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Template Files"
+    },
+    {
+      "type": "paragraph",
+      "content": "🎨 Theme Showcase: index.json (current)<br>🎯 Single Product: index.single-product.json<br>🛒 Multi Product: index.multi-product.json"
+    },
+    {
+      "type": "header",
+      "content": "How to Switch Templates"
+    },
+    {
+      "type": "paragraph",
+      "content": "1. Use the template dropdown in the customizer top bar<br>2. Select the desired template file<br>3. Customize sections for that template<br>4. Save and publish changes"
+    }
+  ]
+}
+{% endschema %}
