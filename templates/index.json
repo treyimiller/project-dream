@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -17,10 +26,8 @@
     "template_guide": {
       "type": "custom-section",
       "settings": {
-        "heading": "How to Switch Between Templates",
-        "content": "<p><strong>To use Single Product Focus layout:</strong><br>1. Click the page selector dropdown (says 'Home page' at the top)<br>2. Click 'Change template' link below it<br>3. Select 'index.single-product'<br>4. Click 'Change' to apply<br><br><strong>To use Multi Product Store layout:</strong><br>1. Click the page selector dropdown<br>2. Click 'Change template'<br>3. Select 'index.multi-product'<br>4. Click 'Change' to apply</p>",
-        "text_alignment": "left",
-        "full_width": false
+        "template_mode": "single",
+        "show_current": true
       }
     }
   },
