@@ -1,0 +1,969 @@
+{% comment %}
+  Project-Dream Theme Showcase Section
+  Demonstrates all theme features, customization options, and conversion tools
+{% endcomment %}
+
+<div class="theme-showcase-section" data-color-scheme="{{ section.settings.color_scheme | default: 'ocean-breeze' }}">
+  <div class="showcase-container">
+    
+    {% comment %} Hero Section {% endcomment %}
+    <div class="showcase-hero">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title">{{ section.settings.hero_title | default: 'Project-Dream Theme' }}</h1>
+          <p class="hero-subtitle">{{ section.settings.hero_subtitle | default: 'The Ultimate Shopify Theme Engineered for Mobile-First Dropshipping Success' }}</p>
+          <div class="hero-features">
+            <div class="feature-badge">
+              <span class="badge-icon">⚡</span>
+              <span class="badge-text">90+ Lighthouse Score</span>
+            </div>
+            <div class="feature-badge">
+              <span class="badge-icon">📱</span>
+              <span class="badge-text">Mobile-First Design</span>
+            </div>
+            <div class="feature-badge">
+              <span class="badge-icon">🎨</span>
+              <span class="badge-text">8 Color Schemes</span>
+            </div>
+          </div>
+          <div class="hero-actions">
+            <button class="btn btn-primary hero-cta" data-color-demo>
+              {{ section.settings.primary_cta | default: 'View Color Schemes' }}
+            </button>
+            <button class="btn btn-secondary hero-cta" data-font-demo>
+              {{ section.settings.secondary_cta | default: 'Try Font Pairings' }}
+            </button>
+          </div>
+        </div>
+        <div class="hero-visual">
+          {% if section.settings.hero_image %}
+            {% render 'image', 
+              image: section.settings.hero_image,
+              class: 'hero-image',
+              loading: 'eager',
+              sizes: '(max-width: 768px) 100vw, 50vw'
+            %}
+          {% else %}
+            <div class="hero-placeholder">
+              <svg class="theme-logo" width="200" height="200" viewBox="0 0 200 200" fill="none">
+                <circle cx="100" cy="100" r="80" stroke="currentColor" stroke-width="4" fill="none"/>
+                <path d="M60 100 L85 125 L140 70" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {% comment %} Color Scheme Demo {% endcomment %}
+    <div class="showcase-section color-demo" data-demo-section="colors">
+      <div class="section-header">
+        <h2 class="section-title">Professional Color Schemes</h2>
+        <p class="section-subtitle">One-click customization with 8 carefully designed color palettes</p>
+      </div>
+      
+      <div class="color-schemes-grid">
+        {% assign schemes = 'modern-minimalist,bold-contrast,warm-earth,ocean-breeze,sunset-vibes,forest-green,royal-purple,neon-dark' | split: ',' %}
+        {% for scheme in schemes %}
+          <div class="color-scheme-card" data-scheme="{{ scheme }}">
+            <div class="scheme-preview" data-scheme-preview="{{ scheme }}">
+              <div class="scheme-colors">
+                <div class="color-swatch color-primary"></div>
+                <div class="color-swatch color-secondary"></div>
+                <div class="color-swatch color-accent"></div>
+                <div class="color-swatch color-background"></div>
+              </div>
+            </div>
+            <div class="scheme-info">
+              <h3 class="scheme-name">{{ scheme | replace: '-', ' ' | capitalize }}</h3>
+              <button class="btn btn-sm apply-scheme" data-apply-scheme="{{ scheme }}">Apply</button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% comment %} Font Pairing Demo {% endcomment %}
+    <div class="showcase-section font-demo" data-demo-section="fonts">
+      <div class="section-header">
+        <h2 class="section-title">Typography Pairings</h2>
+        <p class="section-subtitle">8 professionally paired font combinations for perfect brand expression</p>
+      </div>
+      
+      <div class="font-pairings-grid">
+        {% assign pairings = 'modern-sans,classic-readable,editorial-style,tech-clean,friendly-approachable,sophisticated,bold-impact,minimal-geometric' | split: ',' %}
+        {% for pairing in pairings %}
+          <div class="font-pairing-card" data-pairing="{{ pairing }}">
+            <div class="font-preview">
+              <h3 class="font-heading" data-font-pairing="{{ pairing }}">Heading Text</h3>
+              <p class="font-body" data-font-pairing="{{ pairing }}">This is body text that shows how the font pairing works together in content.</p>
+            </div>
+            <div class="font-info">
+              <h4 class="pairing-name">{{ pairing | replace: '-', ' ' | capitalize }}</h4>
+              <button class="btn btn-sm apply-font" data-apply-font="{{ pairing }}">Apply</button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% comment %} Conversion Tools Demo {% endcomment %}
+    <div class="showcase-section conversion-demo">
+      <div class="section-header">
+        <h2 class="section-title">Built-in Conversion Arsenal</h2>
+        <p class="section-subtitle">Powerful tools designed to turn browsers into buyers</p>
+      </div>
+      
+      <div class="conversion-tools-grid">
+        <div class="tool-demo urgency-demo">
+          <div class="demo-header">
+            <h3>⏰ Urgency Timers</h3>
+            <p>Create FOMO with countdown timers</p>
+          </div>
+          <div class="demo-content">
+            {% render 'urgency-timer', end_date: '2024-12-31 23:59' %}
+          </div>
+        </div>
+
+        <div class="tool-demo stock-demo">
+          <div class="demo-header">
+            <h3>📦 Stock Counters</h3>
+            <p>Display scarcity with low stock alerts</p>
+          </div>
+          <div class="demo-content">
+            <div class="stock-counter">
+              <span class="stock-icon">⚡</span>
+              <span class="stock-text">Hurry! Only 3 left in stock</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tool-demo trust-demo">
+          <div class="demo-header">
+            <h3>🛡️ Trust Badges</h3>
+            <p>Build credibility with security badges</p>
+          </div>
+          <div class="demo-content">
+            {% render 'trust-badges', style: 'standard' %}
+          </div>
+        </div>
+
+        <div class="tool-demo mobile-demo">
+          <div class="demo-header">
+            <h3>📱 Sticky Add-to-Cart</h3>
+            <p>Never lose a sale on mobile</p>
+          </div>
+          <div class="demo-content">
+            <div class="sticky-cart-preview">
+              <div class="preview-phone">
+                <div class="phone-content">
+                  <div class="mock-product">Product Page</div>
+                  <div class="mock-sticky-cart">
+                    <span>Add to Cart - $29.99</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% comment %} Features Grid {% endcomment %}
+    <div class="showcase-section features-overview">
+      <div class="section-header">
+        <h2 class="section-title">Complete Feature Set</h2>
+        <p class="section-subtitle">Everything you need for a high-converting dropshipping store</p>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🚀</div>
+          <h3>Blazing Performance</h3>
+          <p>90+ Lighthouse scores with optimized assets and critical CSS</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Mobile-Obsessed</h3>
+          <p>Designed for vertical content and single-hand use</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Conversion Focused</h3>
+          <p>Built-in urgency timers, stock counters, and trust badges</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h3>Easy Customization</h3>
+          <p>8 color schemes and font pairings with one-click application</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📧</div>
+          <h3>Email Capture</h3>
+          <p>Sophisticated email signup sections with discount integration</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📖</div>
+          <h3>Brand Storytelling</h3>
+          <p>Rich content sections for building brand narrative</p>
+        </div>
+      </div>
+    </div>
+
+    {% comment %} Final CTA {% endcomment %}
+    <div class="showcase-section final-cta">
+      <div class="cta-content">
+        <h2 class="cta-title">{{ section.settings.final_cta_title | default: 'Ready to Launch Your Dream Store?' }}</h2>
+        <p class="cta-subtitle">{{ section.settings.final_cta_subtitle | default: 'Join thousands of successful dropshippers using Project-Dream' }}</p>
+        <div class="cta-stats">
+          <div class="stat">
+            <span class="stat-number">90+</span>
+            <span class="stat-label">Lighthouse Score</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">16</span>
+            <span class="stat-label">Customization Options</span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">8</span>
+            <span class="stat-label">Conversion Tools</span>
+          </div>
+        </div>
+        {% if section.settings.final_cta_url != blank %}
+          <a href="{{ section.settings.final_cta_url }}" class="btn btn-primary btn-large final-btn">
+            {{ section.settings.final_cta_text | default: 'Get Started Now' }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .theme-showcase-section {
+    min-height: 100vh;
+    transition: all var(--transition-base);
+  }
+
+  /* Color scheme variables */
+  .theme-showcase-section[data-color-scheme="ocean-breeze"] {
+    --demo-bg: #f0f8ff;
+    --demo-fg: #1e3a5f;
+    --demo-primary: #006994;
+    --demo-secondary: #4682b4;
+    --demo-accent: #20b2aa;
+    --demo-border: #b0d4e8;
+  }
+
+  .theme-showcase-section[data-color-scheme="sunset-vibes"] {
+    --demo-bg: #fff5ee;
+    --demo-fg: #2f1b14;
+    --demo-primary: #8b3a3a;
+    --demo-secondary: #cd853f;
+    --demo-accent: #ff4500;
+    --demo-border: #f4a460;
+  }
+
+  .theme-showcase-section[data-color-scheme="neon-dark"] {
+    --demo-bg: #0a0a0a;
+    --demo-fg: #ffffff;
+    --demo-primary: #00ff41;
+    --demo-secondary: #333333;
+    --demo-accent: #ff0080;
+    --demo-border: #333333;
+  }
+
+  .showcase-container {
+    background-color: var(--demo-bg, var(--color-background));
+    color: var(--demo-fg, var(--color-foreground));
+    min-height: 100vh;
+    transition: all var(--transition-base);
+  }
+
+  .showcase-section {
+    padding: var(--space-2xl) var(--mobile-padding);
+    max-width: var(--page-width);
+    margin: 0 auto;
+  }
+
+  /* Hero Section */
+  .showcase-hero {
+    padding: var(--space-3xl) var(--mobile-padding);
+    text-align: center;
+  }
+
+  .hero-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+    align-items: center;
+    max-width: var(--page-width);
+    margin: 0 auto;
+  }
+
+  .hero-title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-family-heading);
+    margin-bottom: var(--space-sm);
+    color: var(--demo-primary, var(--color-primary));
+  }
+
+  .hero-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--demo-secondary, var(--color-text-secondary));
+    margin-bottom: var(--space-lg);
+    line-height: 1.4;
+  }
+
+  .hero-features {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+    flex-wrap: wrap;
+  }
+
+  .feature-badge {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    background-color: var(--demo-accent, var(--color-accent));
+    color: white;
+    border-radius: var(--border-radius-lg);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+  }
+
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, var(--demo-primary, var(--color-primary)), var(--demo-accent, var(--color-accent)));
+    border-radius: 50%;
+    color: white;
+  }
+
+  /* Section Headers */
+  .section-header {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .section-title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-family-heading);
+    margin-bottom: var(--space-sm);
+    color: var(--demo-primary, var(--color-primary));
+  }
+
+  .section-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--demo-secondary, var(--color-text-secondary));
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Color Schemes Grid */
+  .color-schemes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .color-scheme-card {
+    background-color: var(--demo-bg, var(--color-background));
+    border: 1px solid var(--demo-border, var(--color-border));
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-lg);
+    text-align: center;
+    transition: transform var(--transition-fast);
+  }
+
+  .color-scheme-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .scheme-preview {
+    margin-bottom: var(--space-md);
+  }
+
+  .scheme-colors {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+  }
+
+  .color-swatch {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid var(--demo-border, var(--color-border));
+  }
+
+  /* Font Pairings Grid */
+  .font-pairings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .font-pairing-card {
+    background-color: var(--demo-bg, var(--color-background));
+    border: 1px solid var(--demo-border, var(--color-border));
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-lg);
+    transition: transform var(--transition-fast);
+  }
+
+  .font-pairing-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .font-preview {
+    margin-bottom: var(--space-md);
+  }
+
+  .font-heading {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-sm);
+    color: var(--demo-primary, var(--color-primary));
+  }
+
+  .font-body {
+    font-size: var(--font-size-base);
+    color: var(--demo-fg, var(--color-foreground));
+    line-height: 1.4;
+  }
+
+  /* Conversion Tools Grid */
+  .conversion-tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .tool-demo {
+    background-color: var(--demo-bg, var(--color-background));
+    border: 1px solid var(--demo-border, var(--color-border));
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-lg);
+    text-align: center;
+  }
+
+  .demo-header h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-xs);
+    color: var(--demo-primary, var(--color-primary));
+  }
+
+  .demo-header p {
+    font-size: var(--font-size-sm);
+    color: var(--demo-secondary, var(--color-text-secondary));
+    margin-bottom: var(--space-md);
+  }
+
+  .preview-phone {
+    width: 120px;
+    height: 200px;
+    background-color: #333;
+    border-radius: 20px;
+    padding: 20px 10px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .phone-content {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mock-product {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xs);
+    color: #666;
+  }
+
+  .mock-sticky-cart {
+    background-color: var(--demo-primary, var(--color-primary));
+    color: white;
+    padding: var(--space-xs);
+    text-align: center;
+    font-size: 10px;
+    font-weight: var(--font-weight-bold);
+  }
+
+  /* Features Grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .feature-card {
+    background-color: var(--demo-bg, var(--color-background));
+    border: 1px solid var(--demo-border, var(--color-border));
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-lg);
+    text-align: center;
+    transition: transform var(--transition-fast);
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .feature-card h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-sm);
+    color: var(--demo-primary, var(--color-primary));
+  }
+
+  .feature-card p {
+    color: var(--demo-secondary, var(--color-text-secondary));
+    line-height: 1.4;
+  }
+
+  /* Final CTA */
+  .final-cta {
+    text-align: center;
+    background: linear-gradient(135deg, var(--demo-primary, var(--color-primary)), var(--demo-accent, var(--color-accent)));
+    color: white;
+    border-radius: var(--border-radius-lg);
+    margin: var(--space-2xl) var(--mobile-padding);
+  }
+
+  .cta-title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-sm);
+  }
+
+  .cta-subtitle {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-xl);
+    opacity: 0.9;
+  }
+
+  .cta-stats {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    display: block;
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-xs);
+  }
+
+  .stat-label {
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+  }
+
+  .final-btn {
+    font-size: var(--font-size-lg);
+    padding: var(--space-lg) var(--space-2xl);
+  }
+
+  /* Responsive design */
+  @media (min-width: 768px) {
+    .hero-content {
+      grid-template-columns: 1fr 1fr;
+      text-align: left;
+    }
+
+    .hero-features {
+      justify-content: flex-start;
+    }
+
+    .hero-actions {
+      justify-content: flex-start;
+    }
+
+    .showcase-section {
+      padding: var(--space-3xl) var(--page-margin);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .conversion-tools-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .features-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  class ThemeShowcase extends HTMLElement {
+    constructor() {
+      super();
+      this.colorDemoBtn = this.querySelector('[data-color-demo]');
+      this.fontDemoBtn = this.querySelector('[data-font-demo]');
+      this.schemeButtons = this.querySelectorAll('[data-apply-scheme]');
+      this.fontButtons = this.querySelectorAll('[data-apply-font]');
+      this.currentScheme = 'ocean-breeze';
+      
+      this.init();
+    }
+
+    init() {
+      this.setupColorDemo();
+      this.setupFontDemo();
+      this.setupSchemeButtons();
+      this.setupFontButtons();
+      this.setupColorSwatches();
+    }
+
+    setupColorDemo() {
+      if (this.colorDemoBtn) {
+        this.colorDemoBtn.addEventListener('click', () => {
+          this.scrollToSection('colors');
+        });
+      }
+    }
+
+    setupFontDemo() {
+      if (this.fontDemoBtn) {
+        this.fontDemoBtn.addEventListener('click', () => {
+          this.scrollToSection('fonts');
+        });
+      }
+    }
+
+    setupSchemeButtons() {
+      this.schemeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const scheme = button.dataset.applyScheme;
+          this.applyColorScheme(scheme);
+        });
+      });
+    }
+
+    setupFontButtons() {
+      this.fontButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const pairing = button.dataset.applyFont;
+          this.applyFontPairing(pairing);
+        });
+      });
+    }
+
+    setupColorSwatches() {
+      // Define color values for each scheme
+      const schemes = {
+        'modern-minimalist': {
+          primary: '#000000',
+          secondary: '#666666',
+          accent: '#0066cc',
+          background: '#ffffff'
+        },
+        'bold-contrast': {
+          primary: '#000000',
+          secondary: '#333333',
+          accent: '#0066ff',
+          background: '#ffffff'
+        },
+        'warm-earth': {
+          primary: '#8b4513',
+          secondary: '#a0522d',
+          accent: '#ff6b35',
+          background: '#faf8f5'
+        },
+        'ocean-breeze': {
+          primary: '#006994',
+          secondary: '#4682b4',
+          accent: '#20b2aa',
+          background: '#f0f8ff'
+        },
+        'sunset-vibes': {
+          primary: '#8b3a3a',
+          secondary: '#cd853f',
+          accent: '#ff4500',
+          background: '#fff5ee'
+        },
+        'forest-green': {
+          primary: '#228b22',
+          secondary: '#556b2f',
+          accent: '#32cd32',
+          background: '#f0fff0'
+        },
+        'royal-purple': {
+          primary: '#663399',
+          secondary: '#9370db',
+          accent: '#da70d6',
+          background: '#faf8ff'
+        },
+        'neon-dark': {
+          primary: '#00ff41',
+          secondary: '#333333',
+          accent: '#ff0080',
+          background: '#0a0a0a'
+        }
+      };
+
+      // Apply colors to swatches
+      Object.keys(schemes).forEach(schemeName => {
+        const preview = this.querySelector(`[data-scheme-preview="${schemeName}"]`);
+        if (preview) {
+          const colors = schemes[schemeName];
+          preview.querySelector('.color-primary').style.backgroundColor = colors.primary;
+          preview.querySelector('.color-secondary').style.backgroundColor = colors.secondary;
+          preview.querySelector('.color-accent').style.backgroundColor = colors.accent;
+          preview.querySelector('.color-background').style.backgroundColor = colors.background;
+        }
+      });
+    }
+
+    scrollToSection(section) {
+      const element = this.querySelector(`[data-demo-section="${section}"]`);
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+
+    applyColorScheme(scheme) {
+      this.currentScheme = scheme;
+      this.dataset.colorScheme = scheme;
+      
+      // Add visual feedback
+      this.schemeButtons.forEach(btn => {
+        btn.textContent = btn.dataset.applyScheme === scheme ? 'Applied!' : 'Apply';
+        btn.classList.toggle('active', btn.dataset.applyScheme === scheme);
+      });
+
+      // Reset after delay
+      setTimeout(() => {
+        this.schemeButtons.forEach(btn => {
+          if (btn.dataset.applyScheme === scheme) {
+            btn.textContent = 'Applied ✓';
+          }
+        });
+      }, 1000);
+
+      // Track event
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'color_scheme_demo', {
+          event_category: 'engagement',
+          event_label: scheme
+        });
+      }
+    }
+
+    applyFontPairing(pairing) {
+      // Update font preview elements
+      const fontElements = this.querySelectorAll(`[data-font-pairing="${pairing}"]`);
+      fontElements.forEach(element => {
+        element.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+          element.style.transform = 'scale(1)';
+        }, 200);
+      });
+
+      // Add visual feedback
+      this.fontButtons.forEach(btn => {
+        btn.textContent = btn.dataset.applyFont === pairing ? 'Applied!' : 'Apply';
+        btn.classList.toggle('active', btn.dataset.applyFont === pairing);
+      });
+
+      // Reset after delay
+      setTimeout(() => {
+        this.fontButtons.forEach(btn => {
+          if (btn.dataset.applyFont === pairing) {
+            btn.textContent = 'Applied ✓';
+          }
+        });
+      }, 1000);
+
+      // Track event
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'font_pairing_demo', {
+          event_category: 'engagement',
+          event_label: pairing
+        });
+      }
+    }
+  }
+
+  customElements.define('theme-showcase', ThemeShowcase);
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Theme Showcase",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero Section"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero title",
+      "default": "Project-Dream Theme"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_subtitle",
+      "label": "Hero subtitle",
+      "default": "The Ultimate Shopify Theme Engineered for Mobile-First Dropshipping Success"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image"
+    },
+    {
+      "type": "text",
+      "id": "primary_cta",
+      "label": "Primary CTA text",
+      "default": "View Color Schemes"
+    },
+    {
+      "type": "text",
+      "id": "secondary_cta",
+      "label": "Secondary CTA text",
+      "default": "Try Font Pairings"
+    },
+    {
+      "type": "header",
+      "content": "Color Scheme Demo"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Default color scheme",
+      "options": [
+        {
+          "value": "modern-minimalist",
+          "label": "Modern Minimalist"
+        },
+        {
+          "value": "bold-contrast",
+          "label": "Bold Contrast"
+        },
+        {
+          "value": "warm-earth",
+          "label": "Warm Earth"
+        },
+        {
+          "value": "ocean-breeze",
+          "label": "Ocean Breeze"
+        },
+        {
+          "value": "sunset-vibes",
+          "label": "Sunset Vibes"
+        },
+        {
+          "value": "forest-green",
+          "label": "Forest Green"
+        },
+        {
+          "value": "royal-purple",
+          "label": "Royal Purple"
+        },
+        {
+          "value": "neon-dark",
+          "label": "Neon Dark"
+        }
+      ],
+      "default": "ocean-breeze"
+    },
+    {
+      "type": "header",
+      "content": "Final CTA"
+    },
+    {
+      "type": "text",
+      "id": "final_cta_title",
+      "label": "Final CTA title",
+      "default": "Ready to Launch Your Dream Store?"
+    },
+    {
+      "type": "text",
+      "id": "final_cta_subtitle",
+      "label": "Final CTA subtitle",
+      "default": "Join thousands of successful dropshippers using Project-Dream"
+    },
+    {
+      "type": "text",
+      "id": "final_cta_text",
+      "label": "Final CTA button text",
+      "default": "Get Started Now"
+    },
+    {
+      "type": "url",
+      "id": "final_cta_url",
+      "label": "Final CTA URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Theme Showcase",
+      "settings": {
+        "hero_title": "Project-Dream Theme",
+        "hero_subtitle": "The Ultimate Shopify Theme Engineered for Mobile-First Dropshipping Success",
+        "color_scheme": "ocean-breeze"
+      }
+    }
+  ]
+}
+{% endschema %}

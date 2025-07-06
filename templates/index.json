@@ -1,20 +1,21 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "main": {
-      "type": "hello-world",
-      "settings": {}
+    "theme_showcase": {
+      "type": "theme-showcase",
+      "settings": {
+        "hero_title": "Project-Dream Theme",
+        "hero_subtitle": "The Ultimate Shopify Theme Engineered for Mobile-First Dropshipping Success. Built from the ground up with a singular focus: converting mobile traffic from social platforms like TikTok and Instagram into sales.",
+        "color_scheme": "ocean-breeze",
+        "primary_cta": "Explore Color Schemes",
+        "secondary_cta": "Try Font Pairings",
+        "final_cta_title": "Ready to Launch Your Dream Store?",
+        "final_cta_subtitle": "Join thousands of successful dropshippers using Project-Dream to build professional, high-converting storefronts in minutes.",
+        "final_cta_text": "Get Started Today",
+        "final_cta_url": "/collections/all"
+      }
     }
   },
   "order": [
-    "main"
+    "theme_showcase"
   ]
 }
