@@ -1,13 +1,15 @@
 {
   "sections": {
-    "template_selector": {
-      "type": "template-selector",
+    "template_guide": {
+      "type": "template-guide",
       "settings": {
-        "template_type": "default"
+        "heading": "Switch Between Templates",
+        "content": "To switch layouts:\n\n1. Go to Online Store > Themes\n2. Click Actions > Edit code\n3. In templates folder, rename:\n   - index.json to index.default.json\n   - index.single.json to index.json (for single product)\n   - index.multi.json to index.json (for multi product)\n\nOr add sections manually below:",
+        "show_templates": true
       }
     }
   },
   "order": [
-    "template_selector"
+    "template_guide"
   ]
 }
