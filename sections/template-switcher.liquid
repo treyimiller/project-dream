@@ -275,7 +275,11 @@
   "settings": [
     {
       "type": "header",
-      "content": "Section Settings"
+      "content": "Template Management"
+    },
+    {
+      "type": "paragraph",
+      "content": "This section allows users to choose between different homepage layouts. Customize the content and behavior below."
     },
     {
       "type": "text",
@@ -342,6 +346,45 @@
       "id": "multi_description",
       "label": "Multi product template description",
       "default": "Ideal for stores with multiple product categories featuring collection showcases and variety"
+    },
+    {
+      "type": "header",
+      "content": "Administrative Settings"
+    },
+    {
+      "type": "select",
+      "id": "current_active_template",
+      "label": "Currently active template",
+      "options": [
+        {
+          "value": "showcase",
+          "label": "Theme Showcase (Default)"
+        },
+        {
+          "value": "single-product",
+          "label": "Single Product Focus"
+        },
+        {
+          "value": "multi-product", 
+          "label": "Multi Product Collections"
+        }
+      ],
+      "default": "showcase",
+      "info": "Select which template is currently being used. This is for reference only - use the template selector in the top bar to actually switch."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_admin_info",
+      "label": "Show template management info",
+      "default": true,
+      "info": "Display administrative information about template switching"
+    },
+    {
+      "type": "textarea",
+      "id": "admin_notes",
+      "label": "Admin notes",
+      "placeholder": "Add any notes about template usage or customizations...",
+      "info": "Internal notes for managing templates (not shown to customers)"
     }
   ],
   "presets": [
