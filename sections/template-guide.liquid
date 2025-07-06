@@ -1,0 +1,125 @@
+{% comment %}
+  Template Guide Section - Instructions for switching templates
+{% endcomment %}
+
+<div class="template-guide section-padding">
+  <div class="container">
+    {% if section.settings.heading != blank %}
+      <h2 class="template-guide__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+    
+    {% if section.settings.content != blank %}
+      <div class="template-guide__content">
+        {{ section.settings.content }}
+      </div>
+    {% endif %}
+    
+    {% if section.settings.show_templates %}
+      <div class="template-guide__templates">
+        <h3>Available Templates:</h3>
+        <ul>
+          <li><strong>Single Product Focus</strong> - Perfect for dropshipping stores focusing on one hero product</li>
+          <li><strong>Multi Product Store</strong> - Ideal for stores with multiple product categories</li>
+        </ul>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .template-guide {
+    background-color: var(--color-background-secondary, #f8f9fa);
+    padding: 2rem 0;
+  }
+  
+  .template-guide__heading {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: {{ section.settings.text_alignment | default: 'center' }};
+  }
+  
+  .template-guide__content {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    text-align: {{ section.settings.text_alignment | default: 'left' }};
+  }
+  
+  .template-guide__templates {
+    margin-top: 2rem;
+  }
+  
+  .template-guide__templates h3 {
+    margin-bottom: 1rem;
+  }
+  
+  .template-guide__templates ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .template-guide__templates li {
+    padding: 1rem;
+    background: white;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Template Guide",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How to Switch Between Templates"
+    },
+    {
+      "type": "textarea",
+      "id": "content",
+      "label": "Content",
+      "default": "Use the template selector to switch between different homepage layouts."
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_templates",
+      "label": "Show template descriptions",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Template Guide"
+    }
+  ]
+}
+{% endschema %}
