@@ -1,0 +1,270 @@
+{% comment %}
+  Sidebar Layout for Project-Dream theme
+  Creates a responsive layout with main content and sidebar
+{% endcomment %}
+
+<div class="sidebar-layout" data-sidebar-layout>
+  <div class="sidebar-layout__container">
+    
+    <!-- Main Content Area -->
+    <main class="sidebar-layout__main" role="main">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'theme-showcase' %}
+            {% render 'theme-showcase-content', block: block %}
+          {% when 'single-product-hero' %}
+            {% render 'single-product-hero', block: block %}
+          {% when 'multi-product-slideshow' %}
+            {% render 'multi-product-slideshow', block: block %}
+          {% when 'featured-collection' %}
+            {% render 'featured-collection', block: block %}
+          {% when 'custom-content' %}
+            <div class="custom-content-block" {{ block.shopify_attributes }}>
+              {% if block.settings.heading != blank %}
+                <h2 class="custom-content__heading">{{ block.settings.heading }}</h2>
+              {% endif %}
+              {% if block.settings.content != blank %}
+                <div class="custom-content__text">{{ block.settings.content }}</div>
+              {% endif %}
+            </div>
+        {% endcase %}
+      {% endfor %}
+    </main>
+
+    <!-- Sidebar -->
+    <aside class="sidebar-layout__sidebar" role="complementary">
+      {% if section.settings.show_layout_switcher %}
+        <div class="sidebar-layout__widget">
+          {% render 'homepage-layout-switcher' %}
+        </div>
+      {% endif %}
+      
+      {% if section.settings.show_color_scheme_picker %}
+        <div class="sidebar-layout__widget">
+          {% render 'color-scheme-picker' %}
+        </div>
+      {% endif %}
+      
+      {% if section.settings.show_font_picker %}
+        <div class="sidebar-layout__widget">
+          {% render 'font-pairing-picker' %}
+        </div>
+      {% endif %}
+      
+      {% if section.settings.sidebar_content != blank %}
+        <div class="sidebar-layout__widget">
+          <div class="sidebar-custom-content">
+            {{ section.settings.sidebar_content }}
+          </div>
+        </div>
+      {% endif %}
+    </aside>
+    
+  </div>
+</div>
+
+{% stylesheet %}
+  .sidebar-layout {
+    width: 100%;
+    padding: var(--mobile-padding);
+  }
+
+  .sidebar-layout__container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .sidebar-layout__main {
+    min-width: 0; /* Prevent overflow */
+  }
+
+  .sidebar-layout__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .sidebar-layout__widget {
+    background-color: var(--color-background-secondary);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+  }
+
+  .custom-content-block {
+    padding: var(--space-lg);
+    text-align: center;
+  }
+
+  .custom-content__heading {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-md);
+  }
+
+  .custom-content__text {
+    color: var(--color-foreground);
+    line-height: 1.6;
+  }
+
+  .sidebar-custom-content {
+    padding: var(--space-lg);
+  }
+
+  /* Tablet and Desktop Layout */
+  @media (min-width: 1024px) {
+    .sidebar-layout__container {
+      grid-template-columns: 1fr 300px;
+      gap: var(--space-2xl);
+      max-width: 1400px;
+    }
+    
+    .sidebar-layout__sidebar {
+      position: sticky;
+      top: var(--space-lg);
+      height: fit-content;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .sidebar-layout__container {
+      grid-template-columns: 1fr 350px;
+    }
+  }
+
+  /* Mobile-first responsive adjustments */
+  @media (max-width: 768px) {
+    .sidebar-layout {
+      padding: var(--space-md);
+    }
+    
+    .sidebar-layout__container {
+      gap: var(--space-lg);
+    }
+    
+    .sidebar-layout__sidebar {
+      order: -1; /* Show sidebar above main content on mobile */
+    }
+    
+    .sidebar-layout__widget {
+      margin-bottom: var(--space-md);
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function() {
+    const sidebarLayout = document.querySelector('[data-sidebar-layout]');
+    
+    if (sidebarLayout) {
+      // Listen for layout changes from the layout switcher
+      document.addEventListener('layout:changed', function(e) {
+        const { layout, template } = e.detail;
+        
+        // Store the preference
+        sessionStorage.setItem('homepage_layout_preference', layout);
+        
+        // You could add additional logic here to dynamically load content
+        // or redirect to the appropriate template
+        console.log(`Layout changed to: ${layout}`);
+      });
+      
+      // Initialize any saved preferences
+      const savedLayout = sessionStorage.getItem('homepage_layout_preference');
+      if (savedLayout) {
+        console.log(`Restored layout preference: ${savedLayout}`);
+      }
+    }
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Sidebar Layout",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_layout_switcher",
+      "label": "Show homepage layout switcher",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_color_scheme_picker",
+      "label": "Show color scheme picker",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_font_picker",
+      "label": "Show font pairing picker",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Sidebar Content"
+    },
+    {
+      "type": "richtext",
+      "id": "sidebar_content",
+      "label": "Custom sidebar content",
+      "info": "Add any custom content to display in the sidebar"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "theme-showcase",
+      "name": "Theme Showcase",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Project-Dream Theme"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "The ultimate Shopify theme for dropshipping success"
+        }
+      ]
+    },
+    {
+      "type": "custom-content",
+      "name": "Custom Content Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sidebar Layout",
+      "blocks": [
+        {
+          "type": "theme-showcase"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -17,27 +17,24 @@
       when 'classic-readable'
         assign heading_family = 'Poppins, system-ui, -apple-system, sans-serif'
         assign body_family = 'Open Sans, system-ui, -apple-system, sans-serif'
-      when 'editorial-style'
+      when 'elegant-serif'
         assign heading_family = 'Playfair Display, Georgia, serif'
         assign body_family = 'Source Sans Pro, system-ui, -apple-system, sans-serif'
-      when 'tech-clean'
-        assign heading_family = 'Montserrat, system-ui, -apple-system, sans-serif'
-        assign body_family = 'Roboto, system-ui, -apple-system, sans-serif'
-      when 'friendly-approachable'
-        assign heading_family = 'Nunito, system-ui, -apple-system, sans-serif'
-        assign body_family = 'Nunito, system-ui, -apple-system, sans-serif'
-      when 'sophisticated'
-        assign heading_family = 'Lora, Georgia, serif'
-        assign body_family = 'Lato, system-ui, -apple-system, sans-serif'
       when 'bold-impact'
         assign heading_family = 'Oswald, system-ui, -apple-system, sans-serif'
         assign body_family = 'PT Sans, system-ui, -apple-system, sans-serif'
-      when 'minimal-geometric'
+      when 'minimal-clean'
         assign heading_family = 'Work Sans, system-ui, -apple-system, sans-serif'
         assign body_family = 'Work Sans, system-ui, -apple-system, sans-serif'
-      when 'custom'
-        assign heading_family = heading_font.family | append: ', ' | append: heading_font.fallback_families
-        assign body_family = body_font.family | append: ', ' | append: body_font.fallback_families
+      when 'creative-display'
+        assign heading_family = 'Nunito, system-ui, -apple-system, sans-serif'
+        assign body_family = 'Nunito, system-ui, -apple-system, sans-serif'
+      when 'professional-corporate'
+        assign heading_family = 'Lora, Georgia, serif'
+        assign body_family = 'Lato, system-ui, -apple-system, sans-serif'
+      when 'trendy-modern'
+        assign heading_family = 'Montserrat, system-ui, -apple-system, sans-serif'
+        assign body_family = 'Roboto, system-ui, -apple-system, sans-serif'
       else
         assign heading_family = 'Inter, system-ui, -apple-system, sans-serif'
         assign body_family = 'Inter, system-ui, -apple-system, sans-serif'
@@ -95,8 +92,8 @@
     --font-weight-bold: 700;
     
     {% comment %} Layout Variables {% endcomment %}
-    --page-width: {{ settings.page_width | default: 1400 }}px;
-    --page-margin: {{ settings.page_margin | default: 24 }}px;
+    --page-width: 100%;
+    --page-margin: 0;
     --spacing-base: {{ settings.spacing_base | default: 16 }}px;
     
     {% comment %} Fluid Spacing Scale {% endcomment %}
@@ -210,26 +207,26 @@
         assign scheme_warning = '#ffa500'
         assign scheme_error = '#ff6347'
         assign scheme_border = '#98fb98'
-      when 'royal-purple'
+      when 'monochrome'
+        assign scheme_bg = '#ffffff'
+        assign scheme_fg = '#1a1a1a'
+        assign scheme_primary = '#000000'
+        assign scheme_secondary = '#666666'
+        assign scheme_accent = '#333333'
+        assign scheme_success = '#555555'
+        assign scheme_warning = '#777777'
+        assign scheme_error = '#999999'
+        assign scheme_border = '#e5e5e5'
+      when 'vibrant-energy'
         assign scheme_bg = '#faf8ff'
         assign scheme_fg = '#2d1b3d'
-        assign scheme_primary = '#663399'
+        assign scheme_primary = '#ff0080'
         assign scheme_secondary = '#9370db'
-        assign scheme_accent = '#da70d6'
+        assign scheme_accent = '#00ff41'
         assign scheme_success = '#32cd32'
         assign scheme_warning = '#ffa500'
         assign scheme_error = '#ff6347'
         assign scheme_border = '#ddd0e8'
-      when 'neon-dark'
-        assign scheme_bg = '#0a0a0a'
-        assign scheme_fg = '#ffffff'
-        assign scheme_primary = '#00ff41'
-        assign scheme_secondary = '#333333'
-        assign scheme_accent = '#ff0080'
-        assign scheme_success = '#00ff41'
-        assign scheme_warning = '#ffff00'
-        assign scheme_error = '#ff0040'
-        assign scheme_border = '#333333'
       when 'custom'
         assign scheme_bg = settings.color_background
         assign scheme_fg = settings.color_foreground

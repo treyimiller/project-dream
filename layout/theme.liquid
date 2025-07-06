@@ -27,9 +27,15 @@
         {% render 'css-variables' %}
         
         {% comment %} Critical above-the-fold styles {% endcomment %}
-        html { font-size: {{ settings.font_size_base | default: 16 }}px; }
+        html { 
+          font-size: {{ settings.font_size_base | default: 16 }}px; 
+          width: 100%;
+          overflow-x: hidden;
+        }
         body { 
           margin: 0; 
+          padding: 0;
+          width: 100%;
           font-family: var(--font-family-body); 
           line-height: var(--line-height-base);
           color: var(--color-foreground);
