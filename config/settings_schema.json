@@ -1,13 +1,5 @@
 [
   {
-    "name": "theme_info",
-    "theme_name": "Project-Dream",
-    "theme_version": "1.0.0",
-    "theme_author": "Devcogent",
-    "theme_documentation_url": "https://devcogent.com/docs/project-dream",
-    "theme_support_url": "https://devcogent.com/support"
-  },
-  {
     "name": "Colors",
     "settings": [
       {
