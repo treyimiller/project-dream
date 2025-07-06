@@ -72,6 +72,11 @@
       "title": "Title",
       "subtitle": "Subtitle",
       "normal": "Normal text"
-    },
+    }
+  },
+  "sections": {
+    "header_group": {
+      "name": "Header Group"
+    }
   }
 }
