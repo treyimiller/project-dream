@@ -1,0 +1,17 @@
+{
+  "type": "custom.template",
+  "name": "Template",
+  "sections": {
+    "template-manager": {
+      "type": "template-manager",
+      "settings": {
+        "current_template": "showcase",
+        "show_guide": true,
+        "show_preview_links": true
+      }
+    }
+  },
+  "order": [
+    "template-manager"
+  ]
+}

@@ -1,0 +1,185 @@
+{% comment %}
+  Template Manager Section for Project-Dream theme
+  Manages homepage template selection and settings
+{% endcomment %}
+
+<div class="template-manager" style="display: none;">
+  {% comment %} This section only appears in the theme customizer {% endcomment %}
+  
+  <div class="template-manager-content">
+    <h3>{{ section.settings.title | default: 'Homepage Template Management' }}</h3>
+    
+    {% if section.settings.show_current_info %}
+      <div class="current-template-display">
+        <p><strong>Active Template:</strong> {{ section.settings.current_template | capitalize }}</p>
+        <p class="template-file">File: 
+          {% case section.settings.current_template %}
+            {% when 'showcase' %}
+              index.json
+            {% when 'single-product' %}
+              index.single-product.json
+            {% when 'multi-product' %}
+              index.multi-product.json
+            {% else %}
+              index.json
+          {% endcase %}
+        </p>
+      </div>
+    {% endif %}
+    
+    {% if section.settings.show_guide %}
+      <div class="template-guide">
+        <h4>Available Homepage Templates:</h4>
+        
+        <div class="template-list">
+          <div class="template-item">
+            <h5>🎨 Theme Showcase</h5>
+            <p>Interactive demonstration of all theme features, color schemes, and font pairings. Perfect for showcasing theme capabilities.</p>
+            <code>index.json</code>
+          </div>
+          
+          <div class="template-item">
+            <h5>🎯 Single Product Focus</h5>
+            <p>Optimized for dropshipping stores focusing on one hero product. Features conversion tools like urgency timers and testimonials.</p>
+            <code>index.single-product.json</code>
+          </div>
+          
+          <div class="template-item">
+            <h5>🛒 Multi Product Collections</h5>
+            <p>Perfect for stores with multiple product categories. Includes slideshow, featured collections, and brand storytelling.</p>
+            <code>index.multi-product.json</code>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    
+    {% if section.settings.show_switching_instructions %}
+      <div class="switching-instructions">
+        <h4>How to Switch Templates:</h4>
+        <ol>
+          <li>Click the template dropdown in the customizer top bar</li>
+          <li>Select your desired template (index, index.single-product, or index.multi-product)</li>
+          <li>Customize the sections specific to that template</li>
+          <li>Save and publish your changes</li>
+        </ol>
+        
+        <div class="pro-tips">
+          <h5>💡 Template Optimization Tips:</h5>
+          <ul>
+            <li><strong>Single Product:</strong> Add urgency timer, testimonials, FAQ, and trust badges</li>
+            <li><strong>Multi Product:</strong> Include featured collections, product grids, and brand story</li>
+            <li><strong>Theme Showcase:</strong> Use to demonstrate all available features and options</li>
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+    
+    {% if section.settings.show_preview_links %}
+      <div class="preview-links">
+        <h4>Quick Template Preview:</h4>
+        <div class="template-preview-buttons">
+          <a href="/?preview_theme_id={{ theme.id }}" class="preview-button preview-button--current">
+            🎨 Theme Showcase
+          </a>
+          <a href="/?preview_theme_id={{ theme.id }}&view=single-product" target="_blank" class="preview-button">
+            🎯 Single Product
+          </a>
+          <a href="/?preview_theme_id={{ theme.id }}&view=multi-product" target="_blank" class="preview-button">
+            🛒 Multi Product
+          </a>
+        </div>
+      </div>
+    {% endif %}
+    
+    {% if section.settings.admin_notes != blank %}
+      <div class="admin-notes">
+        <h4>Admin Notes:</h4>
+        <div class="notes-content">{{ section.settings.admin_notes }}</div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Template Manager",
+  "tag": "section",
+  "class": "section",
+  "enabled_on": {
+    "groups": ["custom.template"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Template Management"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Homepage Template Management"
+    },
+    {
+      "type": "select",
+      "id": "current_template",
+      "label": "Current active template",
+      "options": [
+        {
+          "value": "showcase",
+          "label": "Theme Showcase (Default)"
+        },
+        {
+          "value": "single-product",
+          "label": "Single Product Focus"
+        },
+        {
+          "value": "multi-product",
+          "label": "Multi Product Collections"
+        }
+      ],
+      "default": "showcase",
+      "info": "Select which template is currently active. This is for reference only."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_current_info",
+      "label": "Show current template info",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_guide",
+      "label": "Show template guide",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_switching_instructions",
+      "label": "Show switching instructions",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_preview_links",
+      "label": "Show preview links",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Admin Notes"
+    },
+    {
+      "type": "textarea",
+      "id": "admin_notes",
+      "label": "Internal notes",
+      "placeholder": "Add notes about template usage, customizations, or reminders...",
+      "info": "These notes are only visible in the admin and help with template management."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Template Manager"
+    }
+  ]
+}
+{% endschema %}
